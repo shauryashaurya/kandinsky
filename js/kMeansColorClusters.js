@@ -116,24 +116,77 @@ var kMeansColorClusters = function()
             var newRSS = residualSumOfSquares(clusterArr, newCentroid);
             var distanceBetweenCentroids = squaredEuclideanDistance(centroid, newCentroid);
             // if the centroids match or 
-            if ((newCentroid === centroid) || 
-                (1-(newRSS/oldRSS)<= .01) ||
-                (distanceBetweenCentroids <= 0.1)
-                {
-                    return {"match":true, "centroid":centroid};
-                }
-                else
-                {
-                    return {"match":false, "centroid":newCentroid};
-                }
+            if ((newCentroid === centroid) ||
+                (1 - (newRSS / oldRSS) <= .01) ||
+                (distanceBetweenCentroids <= 0.1))
+            {
+                return {
+                    "match": true,
+                    "centroid": centroid
+                };
+            }
+            else
+            {
+                return {
+                    "match": false,
+                    "centroid": newCentroid
+                };
+            }
+
             return 0;
         }
+
+        var moveCentroids = function(colorPoints, centroids)
+        {
+
+            //
+            old_kcentroids = centroids.slice(); //make a copy
+            var match = false;
+            var centroidObj = {};
+            for (var i = 0; i < centroids.length; i++)
+            {
+                centroidObj = recalculateCentroidPosition(colorPoints, centroids[i]);
+                match = match && centroidObj["match"];
+                kcentroids[i] = centroidObj["centroid"];
+            };
+
+            return match;
+        }
+
+        var calculateProportions = function(centroids, clusters)
+        {
+            // check out SheetJS' fantastic answer on stackoverflow:
+            // http://stackoverflow.com/questions/19395257/how-to-count-duplicate-value-in-an-array-in-javascript
+            /*var counts = {};
+            your_array.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });*/
+            var proportions = {};
+            var len = centroids.length;
+            clusters.forEach(
+                function(c)
+                {
+                    proportions[c.toString()] =
+                        ((proportions[c.toString()] * len || 0) + 1) / len;
+                });
+        }
+
 
 
         var iteration = 1;
         var kcentroids = [];
         var old_kcentroids = [];
+        var colors = []; //array of colors 
+
+        // clusters is an array of same length as colors 
+        // where each cell carries the index of the centroid 
+        // from the kcentroids array
+        // to which the corresponding color in the colors array
+        // is associated
         var clusters = [];
+
+        // colorProportions is an object of same length as kcentroids
+        // each cell carries the proportion that the corresponding color 
+        // in kcentroids exists for
+        var colorProportions = {};
         var rss = Infinity;
         var isInitialState = false;
 
@@ -141,13 +194,21 @@ var kMeansColorClusters = function()
         {
             iteration = 1;
             kcentroids = [];
+            colors = [];
             old_kcentroids = [];
             clusters = [];
+            colorProportions = [];
             rss = Infinity;
             isInitialState = true;
 
         }
-        var calculateKMeansClusters = function(colors, k)
+
+        // create centroids
+        // cluster points by measuring distance to closest centroid
+        // update centroids
+        // cluster again
+        // repeat till centroids do not move
+        var calculateKMeansClusters = function(input_colors, k, pretty_print)
         {
             if (iteration === 1)
             {
@@ -155,61 +216,110 @@ var kMeansColorClusters = function()
                 {
                     resetState();
                 }
+                colors = input_colors.slice(); //make a copy
                 iteration++;
-                kcentroids = seedRandomPoints(pixels, k);
+                kcentroids = seedRandomPoints(colors, k);
+                classifyAllPoints();
+                isInitialState = false;
             }
+            // TODO: how will you run the next iteration??? you idiot???
             else if (iteration > 1)
             {
-                iteration++;
-                old_kcentroids = kcentroids.slice(); //make a copy
-                if (true)
-                {};
-                kcentroids = moveCentroids(pixels, k);
+                while (moveCentroids(colors, kcentroids)["match"])
+                    iteration++;
+                if ()
+                {
+                    var final_data = {
+                        "centroids": kcentroids,
+                        "proportions": calculateProportions(kcentroids, clusters),
+                        "data": colors,
+                        "clusters": clusters
+                    }
+                    if (!pretty_print)
+                    {
+                        return final_data;
+                    }
+                    else
+                    {
+                        // you don't get all the colours of the image in the pretty print
+                        return prettyPrintData(final_data);
+                    }
+                }
             }
-            return kcentroids;
         }
 
+        var prettyPrintData(dataObj)
+        {
+            var result = {
+                "number_of_colors": 0,
+                "colors": []
+            };
+            // find out the number of colours
+            // number of colours = length of centroids array
+            result["number_of_colors"] = dataObj["centroids"].length;
+            // find out the colours
+            // colours = centroids
+            // find out the proportion for each color
+            // # of times index of a centroid is found in clusters array
+            // loop over clusters array and 
 
-        // create centroids
-        // cluster points by measuring distance to closest centroid
-        // update centroids
-        // cluster again
-        // repeat till centroids do not move
+            for (var i = 0; i < dataObj["centroids"].length; i++)
+            {
+                // TODO - this is not going to get to the right proportion, fix it.
+                result["colors"].push(
+                {
+                    "value": dataObj["centroids"][i],
+                    "proportion": dataObj["proportions"][dataObj["centroids"][i].toString()]
+                });
+
+            };
+            return result;
+
+        }
+
 
 
     }
     /*var theme = {
-        "number_of_colors": 7,
-        "colors": 
-        [
-            {
-                "value": "#aabbcc",
-                "proportion": 0.1
-            },
-            {
-                "value": "#aabbcc",
-                "proportion": 0.1
-            },
-            {
-                "value": "#aabbcc",
-                "proportion": 0.1
-            },
-            {
-                "value": "#aabbcc",
-                "proportion": 0.1
-            },
-            {
-                "value": "#aabbcc",
-                "proportion": 0.1
-            },
-            {
-                "value": "#aabbcc",
-                "proportion": 0.1
-            },
-            {
-                "value": "#aabbcc",
-                "proportion": 0.1
+                "number_of_colors": 7,
+                "colors": 
+                [
+                    {
+                        "value": "#aabbcc",
+                        "proportion": 0.1
+                    },
+                    {
+                        "value": "#aabbcc",
+                        "proportion": 0.1
+                    },
+                    {
+                        "value": "#aabbcc",
+                        "proportion": 0.1
+                    },
+                    {
+                        "value": "#aabbcc",
+                        "proportion": 0.1
+                    },
+                    {
+                        "value": "#aabbcc",
+                        "proportion": 0.1
+                    },
+                    {
+                        "value": "#aabbcc",
+                        "proportion": 0.1
+                    },
+                    {
+                        "value": "#aabbcc",
+                        "proportion": 0.1
+                    }
+                ],
             }
-        ],
-    }
-    return theme;*/
+            return theme;*/
+
+
+/*TODO
+*move centroids
+*calculate color proportions
+*pretty print
+implement final loop
+*/
