@@ -1,11 +1,11 @@
 (function()
 {
-    //capture references
+    // capture references
     var win = window;
     var doc = window.document;
     var c01 = this; //win and c01 should refer to the same object - win === c01
 
-    //capture essentials from canvas
+    // capture essentials from canvas
     var c = doc.getElementById("colors");
     var ctx = c.getContext("2d");
     var canvasX = 0;
@@ -16,7 +16,7 @@
     var k = 5;
     var colorModelComponents = ["r", "g", "b", "a"];
 
-    //draw or paint the graphic on the canvas
+    // draw or paint the graphic on the canvas
     setup(ctx, canvasX, canvasY, canvasW, canvasH);
 
     var parseImageData = function(imgData)
@@ -61,7 +61,7 @@ for <= use pixelCount<totalNumberOfPixels-1			*/
         return imgPixelArray;
     }
 
-    //capture the image data
+    // capture the image data
     var imageData = ctx.getImageData(canvasX, canvasY, canvasW, canvasH);
     console.log(imageData.data.length);
     console.log("number of pixels: ", imageData.data.length / colorModelComponents.length);

@@ -51,7 +51,7 @@ var setup = function(ctx, canvasX, canvasY, canvasW, canvasH)
         } : null;
     }
 
-    //draw rectangle shapes, this will be replaced by image load code later
+    // draw rectangle shapes, this will be replaced by image load code later
     var colors = {
         "red": "#a74338",
         "blue": "#906cda",
@@ -60,7 +60,7 @@ var setup = function(ctx, canvasX, canvasY, canvasW, canvasH)
         "deep-red": "#610803"
     };
     var rectCount = 0;
-    //draw the horizontal bars...
+    // draw the horizontal bars...
     for (var color in colors)
     {
         fillStyleString = hexToRgb(colors[color], 1).toString();
@@ -69,10 +69,10 @@ var setup = function(ctx, canvasX, canvasY, canvasW, canvasH)
         //move top to bottom, paint 5 rectangles, y is the top edge so rectCount-1
         ctx.fillRect(0, (rectCount - 1) * (canvasH / 5), canvasW, rectCount * (canvasH / 5));
     }
-    //first try with 5 colours, then uncomment below to have 25 colours
+    // first try with 5 colours, then uncomment below to have 25 colours
     /*//reset rectCount before drawing...
 	rectCount = 0;
-	//the vertical bars.
+	// the vertical bars.
 	for (var color in colors)
 	{
 		fillStyleString = hexToRgb(colors[color], .5).toString();
@@ -81,6 +81,6 @@ var setup = function(ctx, canvasX, canvasY, canvasW, canvasH)
 		//move left to right, paint 5 rectangles, x is the left edge so rectCount-1
 		ctx.fillRect((rectCount-1)*(canvasW/5),0,rectCount*(canvasW/5),canvasH);
 	}
-	//we should now have 25 colours on the screen.*/
+	// we should now have 25 colours on the screen.*/
     return ctx;
 }
