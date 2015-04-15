@@ -79,6 +79,7 @@ var kMeansColorClusters = function()
 
         var classifyPoint = function(point, centroids)
         {
+            ///NOPE NOPE NOPE, bunch of error here - are you sending the right data to be classified???
             var centroidReference = -1;
             var len = centroids.length;
             var i = 0;
