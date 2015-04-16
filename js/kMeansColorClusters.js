@@ -147,7 +147,7 @@ var kMeansColorClusters = function(window, document)
                 (1 - (newRSS / oldRSS) <= .05) ||
                 (distanceBetweenCentroids <= 0.05)) //they either match or are within a 5% error margin
             {
-                console.log("recalculateCentroidPosition: match! - centroid", centroid);
+                //console.log("recalculateCentroidPosition: match! - centroid", centroid);
                 return {
                     "match": true,
                     "centroid": centroid
@@ -155,7 +155,7 @@ var kMeansColorClusters = function(window, document)
             }
             else
             {
-                console.log("recalculateCentroidPosition: no match - new centroid", newCentroid);
+                //console.log("recalculateCentroidPosition: no match - new centroid", newCentroid);
                 return {
                     "match": false,
                     "centroid": newCentroid
@@ -178,7 +178,7 @@ var kMeansColorClusters = function(window, document)
                 match = match && centroidObj["match"];
                 kcentroids[i] = centroidObj["centroid"];
             };
-            console.log("moveCentroids: match situation: ", match);
+            //console.log("moveCentroids: match situation: ", match);
             return match;
         }
 
@@ -196,7 +196,7 @@ var kMeansColorClusters = function(window, document)
                     proportions[c.join("")] =
                         ((proportions[c.join("")] * len || 0) + 1) / len;
                 });
-            console.log("calculateProportions: proportionsObject: ", proportions);
+            //console.log("calculateProportions: proportionsObject: ", proportions);
             return proportions;
         }
 
@@ -212,7 +212,7 @@ var kMeansColorClusters = function(window, document)
             colorProportions = [];
             rss = Infinity;
             isInitialState = true;
-            console.log("resetState: State has been re initialized");
+            //console.log("resetState: State has been re initialized");
         }
 
         // create centroids
@@ -222,7 +222,7 @@ var kMeansColorClusters = function(window, document)
         // repeat till centroids do not move
         var calculateKMeansClusters = function(input_colors, k, pretty_print)
         {
-            console.log("---calculateKMeansClusters---");
+            //console.log("---calculateKMeansClusters---");
             //console.log("input_colors: ", input_colors);
             //console.log("k: ", k);
             //console.log("pretty_print: ", pretty_print);
@@ -238,22 +238,22 @@ var kMeansColorClusters = function(window, document)
                     kcentroids = seedRandomPoints(colors, k);
                     classifyAllPoints(colors, kcentroids);
                     isInitialState = false;
-                    console.log("calculateKMeansClusters: first iteration over");
+                    //console.log("calculateKMeansClusters: first iteration over");
                     iteration++;
-                    console.log("calculateKMeansClusters: next iteration: ", iteration);
+                    //console.log("calculateKMeansClusters: next iteration: ", iteration);
                 }
                 // TODO: how will you run the next iteration??? you idiot???
                 else if (iteration > 1)
                 {
 
                     weDoneHere = moveCentroids(colors, kcentroids) //["match"]
-                    console.log("calculateKMeansClusters: ", iteration, " iteration over, weDoneHere:", weDoneHere);
+                    //console.log("calculateKMeansClusters: ", iteration, " iteration over, weDoneHere:", weDoneHere);
                     if (weDoneHere)
                     {
                         break;
                     }
                     iteration++;
-                    console.log("calculateKMeansClusters: next iteration: ", iteration);
+                    //console.log("calculateKMeansClusters: next iteration: ", iteration);
                     /*if (iteration === 5)
                     {
                         weDoneHere = true;
@@ -265,7 +265,7 @@ var kMeansColorClusters = function(window, document)
             //
             if (weDoneHere)
             {
-                console.log("calculateKMeansClusters: ", iteration, " iteration over, I think we done here! weDoneHere:", weDoneHere);
+                //console.log("calculateKMeansClusters: ", iteration, " iteration over, I think we done here! weDoneHere:", weDoneHere);
 
                 var final_data = {
                     "centroids": kcentroids,
@@ -296,8 +296,8 @@ var kMeansColorClusters = function(window, document)
             // find out the number of colours
             // number of colours = length of centroids array
             result["number_of_colors"] = dataObj["centroids"].length;
-            console.log("prettyPrintData: number_of_colors: ", dataObj["centroids"].length);
-            console.log("prettyPrintData: dataObj: ", dataObj);
+            //console.log("prettyPrintData: number_of_colors: ", dataObj["centroids"].length);
+            //console.log("prettyPrintData: dataObj: ", dataObj);
             // find out the colours
             // colours = centroids
             // find out the proportion for each color
@@ -309,8 +309,8 @@ var kMeansColorClusters = function(window, document)
                 // TODO - this is not going to get to the right proportion, fix it.
                 var colorValue = dataObj["centroids"][i];
                 var colorProportion = dataObj["proportions"][colorValue.join("")]
-                console.log("prettyPrintData: colorValue: ", colorValue);
-                console.log("prettyPrintData: colorProportion: ", colorProportion);
+                //console.log("prettyPrintData: colorValue: ", colorValue);
+                //console.log("prettyPrintData: colorProportion: ", colorProportion);
                 result["colors"].push(
                 {
                     "value": colorValue,
@@ -318,7 +318,7 @@ var kMeansColorClusters = function(window, document)
                 });
 
             };
-            console.log("prettyPrintData: result: ", result);
+            //console.log("prettyPrintData: result: ", result);
             return result;
 
         }

@@ -12,8 +12,11 @@
     var canvasY = 0;
     var canvasH = c.width;
     var canvasW = c.height;
+    var colorBoxDiv = document.getElementById("resultantColors");
 
-    var k = 2;
+    console.log("colorBoxDiv: ", colorBoxDiv);
+
+    var k = 7;
     var colorModelComponents = ["r", "g", "b", "a"];
 
     // draw or paint the graphic on the canvas
@@ -56,15 +59,32 @@
                 imgPixel.push(selectedValue);
             }
             // lets just keep the alpha value aside for a bit.
-            imgPixelArray.push(imgPixel.slice(0,3));
+            imgPixelArray.push(imgPixel.slice(0, 3));
             //console.log(imgPixelArray.length, " ", imgPixel.slice(0,3));
         }
         return imgPixelArray;
     }
 
+    var drawColorBoxes = function(box, colors, n)
+    {
+
+        for (var i = 0; i < colors["colors"].length; i++)
+        {
+            var colorString = "rgb(" + colors["colors"][i]["value"].join(",") + ")";
+            console.log("drawColorBoxes: colorString: ", colorString);
+            var newDiv = document.createElement("div");
+            newDiv.setAttribute("style","width:100px height:100px");
+            newDiv.style.width = 100;
+            newDiv.style.height = 100;
+            newDiv.style.backgroundColor = colorString;
+            box.appendChild(newDiv);
+        };
+
+    }
+
     // capture the image data
     var imageData = ctx.getImageData(canvasX, canvasY, canvasW, canvasH);
-    console.log("total data points in imageData uint8clampedarray: ",imageData.data.length);
+    console.log("total data points in imageData uint8clampedarray: ", imageData.data.length);
     console.log("number of pixels: ", imageData.data.length / colorModelComponents.length);
     var pixels = [];
     pixels = parseImageData(imageData.data);
@@ -72,8 +92,9 @@
 
     var themeColors = {};
     //var kMeans = kMeansColorClusters(this,window,document);
-    themeColors = kMeansColorClusters(this,window,document).call(this,pixels, k, true); //using simple k-means
+    themeColors = kMeansColorClusters(this, window, document).call(this, pixels, k, true); //using simple k-means
     console.log(themeColors);
+    drawColorBoxes(colorBoxDiv, themeColors, k);
 
 })();
 //
