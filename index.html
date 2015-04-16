@@ -7,20 +7,22 @@
         padding: 0px;
     }
     </style>
+    <link rel="stylesheet" href="./css/main.css">
     <title>Extract colour schemes from your favorite photographs</title>
 </head>
 
 <body>
-    <canvas id="colors" width="512" height="50"></canvas>
+    <input type="file" id="file" name="file" />
+    <output id="list"></output>
+    <canvas id="colors" width="500" height="500"></canvas>
     <!-- <canvas id="blue" width="50" height="10"></canvas>
-	<canvas id="orange" width="50" height="10"></canvas>
-	<canvas id="yellow" width="50" height="10"></canvas>
-	<canvas id="deepRed" width="50" height="10"></canvas> -->
+    <canvas id="orange" width="50" height="10"></canvas>
+    <canvas id="yellow" width="50" height="10"></canvas>
+    <canvas id="deepRed" width="50" height="10"></canvas> -->
     <div id="resultantColors" style="position:relative; left:0px; top:100px; background:#00000000; border:#0f0f0f;"></div>
     <script type="text/javascript" src="./js/setup.js"></script>
     <script type="text/javascript" src="./js/kMeansColorClusters.js"></script>
     <script type="text/javascript" src="./js/c01.js"></script>
-
 </body>
 
 </html>

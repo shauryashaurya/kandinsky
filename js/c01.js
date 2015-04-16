@@ -5,6 +5,16 @@
     var doc = window.document;
     var c01 = this; //win and c01 should refer to the same object - win === c01
 
+    //the following comes from http://www.html5rocks.com/en/tutorials/file/dndfiles/
+    if (window.File && window.FileReader && window.FileList && window.Blob)
+    {
+        // Great success! All the File APIs are supported.
+    }
+    else
+    {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+
     // capture essentials from canvas
     var c = doc.getElementById("colors");
     var ctx = c.getContext("2d");
@@ -13,14 +23,17 @@
     var canvasH = c.width;
     var canvasW = c.height;
     var colorBoxDiv = document.getElementById("resultantColors");
+    var imageW = 0;
+    var imageH = 0;
+    var image = new Image();
 
     console.log("colorBoxDiv: ", colorBoxDiv);
 
-    var k = 7;
+    var k = 25;
     var colorModelComponents = ["r", "g", "b", "a"];
-
-    // draw or paint the graphic on the canvas
-    setup(ctx, canvasX, canvasY, canvasW, canvasH);
+    //
+    //
+    // parse image Data
 
     var parseImageData = function(imgData)
     {
@@ -73,7 +86,9 @@
             var colorString = "rgb(" + colors["colors"][i]["value"].join(",") + ")";
             console.log("drawColorBoxes: colorString: ", colorString);
             var newDiv = document.createElement("div");
-            newDiv.setAttribute("style","width:100px height:100px");
+            newDiv.setAttribute("id", "color" + i);
+            newDiv.setAttribute("class", "colorBlock");
+            newDiv.setAttribute("style", "width:100px height:100px");
             newDiv.style.width = 100;
             newDiv.style.height = 100;
             newDiv.style.backgroundColor = colorString;
@@ -82,19 +97,56 @@
 
     }
 
-    // capture the image data
-    var imageData = ctx.getImageData(canvasX, canvasY, canvasW, canvasH);
-    console.log("total data points in imageData uint8clampedarray: ", imageData.data.length);
-    console.log("number of pixels: ", imageData.data.length / colorModelComponents.length);
-    var pixels = [];
-    pixels = parseImageData(imageData.data);
-    //console.log("number of pixels: ", pixels.length);
+    // handle file load from the FileAPI
+    var handleFileSelectionEvent = function(event)
+    {
+        //
+        var file = event.target.files[0];
+        console.log("handleFileSelectionEvent: file: ", file);
+        var reader = new FileReader();
+        reader.onload = function(e)
+        {
+            paintImageIntoCanvas(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
 
-    var themeColors = {};
-    //var kMeans = kMeansColorClusters(this,window,document);
-    themeColors = kMeansColorClusters(this, window, document).call(this, pixels, k, true); //using simple k-means
-    console.log(themeColors);
-    drawColorBoxes(colorBoxDiv, themeColors, k);
+    // draw or paint the graphic on the canvas
+    var paintImageIntoCanvas = function(img)
+    {
+        image = new Image();
+        image.onload = function()
+        {
+            //
+            ctx.clearRect(0, 0, canvasW, canvasH);
+            imageW = image.width;
+            imageH = image.height;
+            c.width = image.width;
+            c.height = image.height;
+            ctx.drawImage(image, 0, 0, image.width, image.height);
+            setup(ctx, image, canvasX, canvasY, canvasW, canvasH, imageW, imageH);
+        };
+        image.src = img;
+    }
+
+    var setup = function(ctx, image, canvasX, canvasY, canvasW, canvasH, imageW, imageH)
+    {
+        // capture the image data
+        var imageData = ctx.getImageData(canvasX, canvasY, imageW, imageH);
+        console.log("total data points in imageData uint8clampedarray: ", imageData.data.length);
+        console.log("number of pixels: ", imageData.data.length / colorModelComponents.length);
+        var pixels = [];
+        pixels = parseImageData(imageData.data);
+        //console.log("number of pixels: ", pixels.length);
+
+        var themeColors = {};
+        //var kMeans = kMeansColorClusters(this,window,document);
+        themeColors = kMeansColorClusters(this, window, document).call(this, pixels, k, true); //using simple k-means
+        console.log(themeColors);
+        drawColorBoxes(colorBoxDiv, themeColors, k);
+        return 0;
+    }
+    document.getElementById('file').addEventListener('change', handleFileSelectionEvent, false);
 
 })();
 //
