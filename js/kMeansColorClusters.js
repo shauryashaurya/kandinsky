@@ -1,5 +1,6 @@
-var kMeansColorClusters = function()
+var kMeansColorClusters = function(this,window,document)
     {
+        var self = this;
         // pick up n random colors from all the ones provided
         var seedRandomPoints = function(arr, n)
         {
@@ -79,7 +80,7 @@ var kMeansColorClusters = function()
 
         var classifyPoint = function(point, centroids)
         {
-            ///NOPE NOPE NOPE, bunch of error here - are you sending the right data to be classified???
+            ///NOPE NOPE NOPE, bunch of errors here - are you sending the right data to be classified???
             var centroidReference = -1;
             var len = centroids.length;
             var i = 0;
@@ -211,6 +212,7 @@ var kMeansColorClusters = function()
         // repeat till centroids do not move
         var calculateKMeansClusters = function(input_colors, k, pretty_print)
         {
+            var weDoneHere = false;
             if (iteration === 1)
             {
                 if (!isInitialState)
@@ -226,9 +228,12 @@ var kMeansColorClusters = function()
             // TODO: how will you run the next iteration??? you idiot???
             else if (iteration > 1)
             {
-                while (moveCentroids(colors, kcentroids)["match"])
+                do {
+                    weDoneHere = moveCentroids(colors, kcentroids)["match"]
                     iteration++;
-                if ()
+                } while (!weDoneHere)
+                //
+                if (weDoneHere)
                 {
                     var final_data = {
                         "centroids": kcentroids,
@@ -246,6 +251,7 @@ var kMeansColorClusters = function()
                         return prettyPrintData(final_data);
                     }
                 }
+
             }
         }
 

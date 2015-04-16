@@ -36,10 +36,10 @@
         // so...
 
         /* Also, notice the < sign in the for loop below, 
-avoid off by one error
-using the following thumb rule
-for < use pixelCount<totalNumberOfPixels
-for <= use pixelCount<totalNumberOfPixels-1			*/
+            avoid off by one error
+            using the following thumb rule
+            for < use pixelCount<totalNumberOfPixels
+            for <= use pixelCount<totalNumberOfPixels-1 */
         for (pixelCount = 0; pixelCount < imgData.length; pixelCount += numColorModelComponents)
         {
             var imgPixel = [];
@@ -70,7 +70,8 @@ for <= use pixelCount<totalNumberOfPixels-1			*/
     console.log("number of pixels: ", pixels.length);
 
     var themeColors = {};
-    themeColors = kMeansColorClusters(pixels, k); //using simple k-means
+    var kMeans = kMeansColorClusters(this,window,document);
+    themeColors = kMeans.calculateKMeansClusters(pixels, k, true); //using simple k-means
     console.log(themeColors);
 
 })();
