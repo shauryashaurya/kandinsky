@@ -13,7 +13,7 @@
     var canvasH = c.width;
     var canvasW = c.height;
 
-    var k = 5;
+    var k = 2;
     var colorModelComponents = ["r", "g", "b", "a"];
 
     // draw or paint the graphic on the canvas
@@ -55,8 +55,9 @@
                 var selectedValue = imgData[imgDataArrayIndex];
                 imgPixel.push(selectedValue);
             }
-            imgPixelArray.push(imgPixel);
-            //console.log(imgPixelArray.length, " ", imgPixel);
+            // lets just keep the alpha value aside for a bit.
+            imgPixelArray.push(imgPixel.slice(0,3));
+            //console.log(imgPixelArray.length, " ", imgPixel.slice(0,3));
         }
         return imgPixelArray;
     }
