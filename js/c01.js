@@ -56,22 +56,22 @@
                 imgPixel.push(selectedValue);
             }
             imgPixelArray.push(imgPixel);
-            console.log(imgPixelArray.length, " ", imgPixel);
+            //console.log(imgPixelArray.length, " ", imgPixel);
         }
         return imgPixelArray;
     }
 
     // capture the image data
     var imageData = ctx.getImageData(canvasX, canvasY, canvasW, canvasH);
-    console.log(imageData.data.length);
+    console.log("total data points in imageData uint8clampedarray: ",imageData.data.length);
     console.log("number of pixels: ", imageData.data.length / colorModelComponents.length);
     var pixels = [];
     pixels = parseImageData(imageData.data);
-    console.log("number of pixels: ", pixels.length);
+    //console.log("number of pixels: ", pixels.length);
 
     var themeColors = {};
-    var kMeans = kMeansColorClusters(this,window,document);
-    themeColors = kMeans.calculateKMeansClusters(pixels, k, true); //using simple k-means
+    //var kMeans = kMeansColorClusters(this,window,document);
+    themeColors = kMeansColorClusters(this,window,document).call(this,pixels, k, true); //using simple k-means
     console.log(themeColors);
 
 })();
