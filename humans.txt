@@ -1,0 +1,19 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Shaurya Agarwal -- Design and Code -- @shauryashaurya
+
+# THANKS
+
+    Leptonica (http://www.leptonica.com/)
+    Nick Rabinowitz (quantize.js, https://gist.github.com/nrabinowitz/1104622)
+    Heather Arthur (Clusterfck, https://github.com/harthur/clusterfck)
+    Mike Bostock (Protovis, https://github.com/mbostock/protovis)
+    Jean-Yves Delort / jydelort (code.google.com/p/figue and http://jydelort.appspot.com/)
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    jQuery, Modernizr
