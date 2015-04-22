@@ -7,6 +7,7 @@
     console.log("win: ", win);
     console.log("doc: ", doc);
     console.log("self: ", self);
+    kandinsky(win, doc);
     console.log("ready!");
 
     /*Approach:
@@ -16,7 +17,7 @@
 		c. image.source = file reader.file
 	2. Extract Image Data:
 		a. canvas.imagedata = transform this array to array of [r,g,b] colors
-		b. pass this to K means
+		b. pass this to K means (or selected algorithm)
 		c. once k means returns, draw swatches
 	3. K Means:
 		a. Pick K random centroids from array
@@ -40,6 +41,16 @@
 		 in the centroids array
 	selected_colours: [r,g,b],[r,g,b],[r,g,b]...k linear array of K colour values
 	proportions: [p1, p2, p3, ..., pk] linear array of K values
+	*/
+
+	/* To use:
+	//step 1: prepare data
+	//capture image data from canvas and prepare array of colours from it
+	imgData = kandinsky.dataHelpers.prepareColorDataArray(imageData(canvas.context, canvasW, canvasH)); 
+	// step 2: invoke algorithm
+	quantizedColorSet = kandinsky.getQuantizedColorSet(imgData, Algorithm[, {algorighthm parameters}]);
+	for e.g. when using K-Means
+	quantizedColorSet = kandinsky.getQuantizedColorSet(imgData, "KMeans", {k:7, maxIter:500});
 	*/
 
 
