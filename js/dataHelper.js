@@ -4,7 +4,7 @@ var dataHelper = function(callerContext)
 
     var prepareColorDataArray = function(imageDataArray)
     {
-        console.log("dataHelper: prepareColorDataArray: ")
+        console.log("dataHelper: prepareColorDataArray: ");
         return [];
     }
 
