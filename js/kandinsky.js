@@ -37,7 +37,7 @@ var Kandinsky = function(ctx)
 		{
 			pickCentroids(computeClusters());
 		}
-		return [centroids, clustercount];
+		return [centroids, clustercount];*/
 
 	}
 
