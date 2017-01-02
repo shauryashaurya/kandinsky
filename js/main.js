@@ -60,9 +60,12 @@
         //console.log("analyzeImage: wassily: ", wassily);
         //
         //imageColors = wassily.quantizeColors(wassily.K_MEANS,pixelChunks,k);
-        imageColors = Kandinsky(self).quantizeColors("kmeans",pixelChunks,k);
+        //Kandinsky(self.quantizeColors("kmeans",pixelChunks,k));
+        imageColors = quantizeColors("kmeans",pixelChunks,k);//Kandinsky.quantizeColors("kmeans",pixelChunks,k);
+
+        //console.log(Kandinsky(self));
         console.log("analyzeImage: imageData: ", imageData.data);
-        console.log("analyzeImage: imageColors: ", imageColors.colors);
+        console.log("analyzeImage: imageColors: ", imageColors);
         //imageColors = 
     }
 

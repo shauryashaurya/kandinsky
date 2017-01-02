@@ -1,5 +1,5 @@
-var Kandinsky = function(ctx)
-{
+/*var Kandinsky = function(ctx)
+{*/
 
 	var self = this;
 	
@@ -16,19 +16,16 @@ var Kandinsky = function(ctx)
 	console.log("kandinsky: ctx: ", ctx);
 	console.log("kandinsky: self: ", self);
 	
-	var kmeans = function(vectors,k)
+	function compute_kmeans (vectors,k)
 	{
 		self.vectors = vectors.slice();
 		self.k = k;
 		self.vectorLength = self.vectors[0].length;
 		centroids = new Array(self.k);
 		oldCentroids = new Array(self.k);
-
-
-
-
 		console.log("kmeans: vectors: ",vectors);
 		console.log("kmeans: k: ", k);
+		findPointWithLeastRSS (vectors)
 		return {'colors':[[1,1,1],[50,50,50],[255,255,255]], 'ratio':[0.1,0.5,0.4]};
 
 		/*
@@ -41,14 +38,14 @@ var Kandinsky = function(ctx)
 
 	}
 
-	var initCentroids = function ()
+	function initCentroids()
 	{
 		//take RGB data from the table and pick random centroids
 		//initialize another set of centroids array to zero
 
 	}
 
-	var pickCentroids = function ()
+	function pickCentroids()
 	{
 		//take RGB data clustered around old centroids and find new centroids for the clusters
 		//this one's going to be a bit complicated - we need to compute the median and not the average.
@@ -58,7 +55,7 @@ var Kandinsky = function(ctx)
 
 	}
 
-	var findPointWithLeastRSS = function(arr)
+	function findPointWithLeastRSS (arr)
 	{
 		var point = arr[0];
 		var rss_arr = [];
@@ -72,27 +69,33 @@ var Kandinsky = function(ctx)
 		}
 		min_rss = rss_arr[0];
 		for (i=0;i<arr_len;i++){
+			console.log("kandinsky.findPointWithLeastRSS: min_rss = "+min_rss);
+			console.log("kandinsky.findPointWithLeastRSS: rss_arr["+i+"] = "+rss_arr[i]);
 			if(min_rss<rss_arr[i]){
 				min_rss=rss_arr[i];
 				pointIndex = i;
+			console.log("kandinsky.findPointWithLeastRSS: lower rss found: rss_arr["+i+"] = "+rss_arr[i]);
+
 			};
 		}
-		return arr[i];
+		console.log("kandinsky.findPointWithLeastRSS: arr["+pointIndex+"] = "+arr[pointIndex]);
+		return arr[pointIndex];
 	}
 
-	var computeClusters = function(dentroidsNow, points)
+	function computeClusters (dentroidsNow, points)
 	{
 		//take a set of centroids and classify each point around one of the centroids
 		//note the count for each cluster - this gives you the number of points associated to each centroid
 		return [newCentroids, clustercount];
 	}
 
-	var compareCentroids = function ()
+	function compareCentroids ()
 	{
 		//take two sets of centroids and see if they moved much or not
 		//how? their residual sum of squares is minimum or has not changed much
 
-		return centroidsHaveConverged;
+		//return centroidsHaveConverged;
+		return true;
 
 	}
 
@@ -103,9 +106,16 @@ var Kandinsky = function(ctx)
 
 	var algorithmNameStrings = ["kMeans"];
 
+	function quantizeColors (algorithmNameStr, colorArray, numberOfColors){
+		if (numberOfColors === 0 || numberOfColors<0){
+			numberOfColors = 2;
+		}
+		return compute_kmeans(colorArray, numberOfColors);
+	}
+
 	
-	//return self;
-};
+	/*return this;
+}();*/
 
 /*K Means:
         a. Pick K random centroids from array

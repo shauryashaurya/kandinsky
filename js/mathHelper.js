@@ -37,6 +37,7 @@ var residualSumOfSquares = function(arr, centroid)
     {
         rss += squaredEuclideanDistance(arr[i], centroid);
     }
+    console.log("rss for "+centroid+" is = "+rss);
     return rss;
 };
 
