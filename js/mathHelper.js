@@ -7,20 +7,19 @@ var squareOfDifference = function(a, b)
 
 var squaredEuclideanDistance = function(pointA, pointB)
 {
-    var lenA = pointA.length;
-    var lenB = pointB.length;
+    //var lenA = pointA.length;
+    //var lenB = pointB.length;
     var i = 0;
     var distance = 0;
-
-    if (lenA === lenB)
-    {
-        for (i = 0; i < lenA; i++)
+    //if (lenA === lenB)
+    //{
+        for (i = 0; i < 4; i++)
         {
             distance += squareOfDifference(pointA[i], pointB[i]);
         }
         return distance;
-    }
-    else return NaN;
+    //}
+   // else return NaN;
 
     //return Math.sqrt((pointB[0] - pointA[0]) * (pointB[0] - pointA[0]) +
     //    (pointB[1] - pointA[1]) * (pointB[1] - pointA[1]) +
