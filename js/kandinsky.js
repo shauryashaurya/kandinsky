@@ -51,8 +51,33 @@ var Kandinsky = function(ctx)
 	var pickCentroids = function ()
 	{
 		//take RGB data clustered around old centroids and find new centroids for the clusters
+		//this one's going to be a bit complicated - we need to compute the median and not the average.
+		//the median is the point with the least RSS
 
 
+
+	}
+
+	var findPointWithLeastRSS = function(arr)
+	{
+		var point = arr[0];
+		var rss_arr = [];
+		var min_rss=0;
+		var pointIndex = 0;
+		var arr_len = arr.length;
+		var i = 0;
+		// find rss for all points in the array
+		for (i=0;i<arr_len;i++){
+			rss_arr.push(residualSumOfSquares(arr,arr[i]))
+		}
+		min_rss = rss_arr[0];
+		for (i=0;i<arr_len;i++){
+			if(min_rss<rss_arr[i]){
+				min_rss=rss_arr[i];
+				pointIndex = i;
+			};
+		}
+		return arr[i];
 	}
 
 	var computeClusters = function(dentroidsNow, points)
