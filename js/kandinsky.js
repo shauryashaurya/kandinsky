@@ -25,11 +25,11 @@
 		//console.log("kmeans: vectors: ",vectors);
 		console.log("kmeans: k: ", k);
 		//
-		centroids = [];
-		clusters = [];
+		self.centroids = [];
+		self.clusters = [];
 		initCentroids();
-		console.log("kmeans: compute_kmeans: centroids = ",centroids);
-		oldCentroids = [];
+		console.log("kmeans: compute_kmeans: centroids = ",JSON.stringify(self.centroids));
+		self.oldCentroids = [];
 		totaliter = 0;
 		while(compareCentroids () || totaliter>500){
 			totaliter++;
@@ -54,17 +54,19 @@
 		//take RGB data from the table and pick random centroids
 		//initialize another set of centroids array to zero
 		var i=0;
-		centroids = [];
+		var i2 = 0;
+		self.centroids = [];
 		console.log("kmeans: initCentroids: k: ",k);
 		for (i=0;i<k;i++){
 			var randPointIndex = Math.round(vectors.length*Math.random());
 			console.log("kmeans: initCentroids: randPointIndex",randPointIndex);
-			console.log("kmeans: initCentroids: vectors[",randPointIndex,"] = ",self.vectors[randPointIndex]);
-			//centroids.push(self.vectors[randPointIndex]);
-			centroids.push(JSON.parse(JSON.stringify(vectors[randPointIndex])));
-			console.log("kmeans: loop ",i,"initCentroids: ",centroids);
+			console.log("kmeans: initCentroids: vectors[",randPointIndex,"] = ",JSON.stringify(self.vectors[randPointIndex]));
+			self.centroids[i] = [];
+			for(i2=0;i2<self.vectors[randPointIndex].length;i2++){
+				self.centroids[i].push(self.vectors[randPointIndex][i2]);
+			}
 		}
-		console.log("kmeans: initCentroids: ",centroids);
+		console.log("kmeans: initCentroids: ",JSON.stringify(self.centroids));
 
 	}
 

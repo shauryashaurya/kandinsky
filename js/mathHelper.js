@@ -9,6 +9,8 @@ var squaredEuclideanDistance = function(pointA, pointB)
 {
     //var lenA = pointA.length;
     //var lenB = pointB.length;
+    //console.log("mathHelper: squaredEuclideanDistance: pointA = ", JSON.stringify(pointA));
+    //console.log("mathHelper: squaredEuclideanDistance: pointB = ", JSON.stringify(pointB));
     var i = 0;
     var distance = 0;
     //if (lenA === lenB)
