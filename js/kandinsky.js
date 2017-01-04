@@ -23,14 +23,30 @@ function compute_kmeans(vectors, k) {
 	totaliter = 0;
 	while (compareCentroids() && totaliter < 1000) {
 		totaliter++;
-		console.log("******* iteration # ", totaliter, "********");
+		//console.log("******* iteration # ", totaliter, "********");
 		computeClusters();
 		pickCentroids();
 	}
 	return {
 		'colors': centroids,
-		'ratio': [0.1, 0.5, 0.4]
+		'ratio': getRatioArr(),
+		'iterations': totaliter
 	};
+}
+
+function getRatioArr() {
+	var centlen = centroids.length;
+	var veclen = vectors.length;
+	var i = 0;
+	var ratioArr = [];
+	//console.log("getRatioArr: centroids.length = ",centlen);
+	//console.log("getRatioArr: vectors.length = ",veclen);
+	for (i = 0; i < centlen; i++) {
+	//console.log("getRatioArr: centclusters[",i,"] = ",centclusters[i].length);
+		ratioArr.push((centclusters[i].length / veclen) * 100);
+	}
+	//console.log("getRatioArr: centroids.length = ",centlen);
+	return ratioArr;
 }
 
 function initCentroids() {
@@ -90,6 +106,7 @@ function pickCentroids() {
 	for (i = 0; i < lenclust; i++) {
 		centclusters[clusters[i]].push(JSON.parse(JSON.stringify(self.vectors[i])));
 	}
+	
 	for (i = 0; i < k; i++) {
 		centroids.push(findPointWithLeastRSS(centclusters[i]));
 	}
@@ -183,6 +200,11 @@ function compareCentroids() {
 			totalsumofcentroiddistance += centDist[i];
 		}
 		centroidsHaveConverged = (totalsumofcentroiddistance == 0);
+		//console.log("compareCentroids: centDist: ", JSON.stringify(oldCentRss));
+		//console.log("compareCentroids: centDist: ", JSON.stringify(centRss));
+		//console.log("compareCentroids: centDist: ", JSON.stringify(centDist));
+		//console.log("compareCentroids: totalsumofcentroiddistance: ", totalsumofcentroiddistance);
+		//console.log("compareCentroids: centroidsHaveConverged: ", JSON.stringify(centroidsHaveConverged));
 	}
 	return !centroidsHaveConverged;
 }
