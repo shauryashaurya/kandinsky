@@ -9,9 +9,9 @@
         colorSwatchContainerDiv = doc.getElementById("colorSwatchContainer"),
         k=2;
 
-    console.log("win: ", win);
-    console.log("doc: ", doc);
-    console.log("self: ", self);
+    //console.log("win: ", win);
+    //console.log("doc: ", doc);
+    //console.log("self: ", self);
     //kandinsky(win, doc);
     console.log("ready!");
 
