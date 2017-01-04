@@ -22,7 +22,6 @@ var squaredEuclideanDistance = function(pointA, pointB)
         return distance;
     //}
    // else return NaN;
-
     //return Math.sqrt((pointB[0] - pointA[0]) * (pointB[0] - pointA[0]) +
     //    (pointB[1] - pointA[1]) * (pointB[1] - pointA[1]) +
     //    (pointB[2] - pointA[2]) * (pointB[2] - pointA[2]));
@@ -38,7 +37,7 @@ var residualSumOfSquares = function(arr, centroid)
     {
         rss += squaredEuclideanDistance(arr[i], centroid);
     }
-    console.log("rss for "+centroid+" is = "+rss);
+    //console.log("rss for "+centroid+" is = "+rss);
     return rss;
 };
 
