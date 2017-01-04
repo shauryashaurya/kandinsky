@@ -29,7 +29,7 @@ function compute_kmeans(vectors, k) {
 	//console.log("kmeans: compute_kmeans: centroids = ",JSON.stringify(self.centroids));
 	self.oldCentroids = [];
 	totaliter = 0;
-	while (compareCentroids() || totaliter < 5) {
+	while (compareCentroids() && totaliter < 5) {
 		totaliter++;
 		console.log("******* iteration # ", totaliter, "********");
 		computeClusters();
@@ -196,32 +196,36 @@ function compareCentroids() {
 	var cl = centroids.length;
 	var centDist = [];
 	var totalsumofcentroiddistance = 0;
-	centRss = [];
+	//
 	oldCentRss = [];
 	// 'old' DS don't exist for the first iteration, so cannot compare, hence do this from iteration 2 onwards.
 	if (totaliter > 1) {
-		// first calculate the RSS
+		// first move current RSS to old
+		for (i = 0; i < cl; i++) {
+			oldCentRss.push(centRss[i]);
+		}
+		centRss = [];
+		//  calculate the new RSS
 		for (i = 0; i < cl; i++) {
 			centRss.push(residualSumOfSquares(centclusters[i], centroids[i]));
-			oldCentRss.push(residualSumOfSquares(centclusters[i], oldCentroids[i]));
+			//oldCentRss.push(residualSumOfSquares(centclusters[i], oldCentroids[i]));
 		}
 		// now eval the diff for each centroid
 		for (i = 0; i < cl; i++) {
-			console.log("compareCentroids - centRss[", i, "]: ", JSON.stringify(centRss[i]));
-			console.log("compareCentroids - oldCentRss[", i, "]: ", JSON.stringify(oldCentRss[i]));
 			centDist.push(Math.abs(Math.abs(oldCentRss[i]) - Math.abs(centRss[i])));
-			console.log("compareCentroids - centDist[", i, "]: ", JSON.stringify(centDist[i]));
 		}
-		console.log("compareCentroids - centDist:" + JSON.stringify(centDist));
+		//console.log("compareCentroids - oldCentRss:" + JSON.stringify(oldCentRss));
+		//console.log("compareCentroids - centRss:" + JSON.stringify(centRss));
+		//console.log("compareCentroids - centDist:" + JSON.stringify(centDist));
 		//
 		for (i = 0; i < cl; i++) {
 			totalsumofcentroiddistance += centDist[i];
 		}
-		console.log("compareCentroids - totalsumofcentroiddistance:" + totalsumofcentroiddistance);
+		//console.log("compareCentroids - totalsumofcentroiddistance:" + totalsumofcentroiddistance);
 		centroidsHaveConverged = (totalsumofcentroiddistance == 0);
-		console.log("kandinsky: compareCentroids: centroidsHaveConverged = " + centroidsHaveConverged);
+		//console.log("compareCentroids: centroidsHaveConverged = " + centroidsHaveConverged);
 	}
-	return centroidsHaveConverged;
+	return !centroidsHaveConverged;
 }
 var algorithmNameStrings = ["kMeans"];
 

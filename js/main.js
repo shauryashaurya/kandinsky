@@ -6,7 +6,7 @@
 		imagePreviewCanvas = doc.getElementById("imagePreview"),
 		imagePreviewCanvas2dContext = imagePreviewCanvas.getContext("2d"),
 		colorSwatchContainerDiv = doc.getElementById("colorSwatchContainer"),
-		k = 2;
+		k = 5;
 	//console.log("win: ", win);
 	//console.log("doc: ", doc);
 	//console.log("self: ", self);
