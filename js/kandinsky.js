@@ -21,7 +21,7 @@ function compute_kmeans(vectors, k) {
 	initCentroids();
 	self.oldCentroids = [];
 	totaliter = 0;
-	while (compareCentroids() && totaliter < 5) {
+	while (compareCentroids() && totaliter < 1000) {
 		totaliter++;
 		console.log("******* iteration # ", totaliter, "********");
 		computeClusters();
