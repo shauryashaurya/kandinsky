@@ -1,5 +1,3 @@
-/*var Kandinsky = function(ctx)
-{*/
 var self = this;
 var vectors = [];
 var clusters = [];
@@ -13,20 +11,14 @@ var oldCentRss = [];
 var proportions = [];
 var totaliter = 0;
 var initialized = false;
-console.log("kandinsky here");
-//console.log("kandinsky: self: ", self);
+
 function compute_kmeans(vectors, k) {
 	self.vectors = vectors.slice();
 	self.k = k;
 	self.vectorLength = self.vectors[0].length;
-	//
-	//console.log("kmeans: vectors: ",vectors);
-	//console.log("kmeans: k: ", k);
-	//
 	self.centroids = [];
 	self.clusters = [];
 	initCentroids();
-	//console.log("kmeans: compute_kmeans: centroids = ",JSON.stringify(self.centroids));
 	self.oldCentroids = [];
 	totaliter = 0;
 	while (compareCentroids() && totaliter < 5) {
@@ -39,13 +31,6 @@ function compute_kmeans(vectors, k) {
 		'colors': centroids,
 		'ratio': [0.1, 0.5, 0.4]
 	};
-	/*
-	initCentroids();
-	while ((compareCentroids() === false)||(iterations<maxIterations))
-	{
-		pickCentroids(computeClusters());
-	}
-	return [centroids, clustercount];*/
 }
 
 function initCentroids() {
@@ -61,7 +46,6 @@ function initCentroids() {
 	var pointrepeatsIterationCount = 0;
 	var veclen = vectors.length;
 	self.centroids = [];
-	console.log("kmeans: initCentroids: k: ", k);
 	for (i = 0; i < k; i++) {
 		randPointIndex = Math.round(veclen * Math.random());
 		// check the centroid array for existing point
@@ -83,7 +67,6 @@ function initCentroids() {
 			self.centroids[i].push(self.vectors[randPointIndex][i2]);
 		}
 	}
-	console.log("kmeans: initCentroids: ", JSON.stringify(self.centroids));
 }
 
 function pickCentroids() {
@@ -103,17 +86,13 @@ function pickCentroids() {
 		oldCentroids.push(centroids.pop());
 		centclusters.push([]);
 	}
-	//console.log("pickCentroids - before - centclusters:" + JSON.stringify(centclusters));
 	// now cycle through the clusters array to pick vectors for each centroid
 	for (i = 0; i < lenclust; i++) {
 		centclusters[clusters[i]].push(JSON.parse(JSON.stringify(self.vectors[i])));
 	}
-	//console.log("pickCentroids - after - centclusters:" + JSON.stringify(centclusters));
 	for (i = 0; i < k; i++) {
 		centroids.push(findPointWithLeastRSS(centclusters[i]));
 	}
-	//console.log("pickCentroids - pass 2 - oldCentroids:"+JSON.stringify(oldCentroids));
-	//console.log("pickCentroids - pass 2 - centroids:"+JSON.stringify(centroids));
 }
 
 function findPointWithLeastRSS(arr) {
@@ -129,15 +108,11 @@ function findPointWithLeastRSS(arr) {
 	}
 	min_rss = rss_arr[0];
 	for (i = 0; i < arr_len; i++) {
-		//console.log("kandinsky.findPointWithLeastRSS: min_rss = "+min_rss);
-		//console.log("kandinsky.findPointWithLeastRSS: rss_arr["+i+"] = "+rss_arr[i]);
 		if (min_rss < rss_arr[i]) {
 			min_rss = rss_arr[i];
 			pointIndex = i;
-			//console.log("kandinsky.findPointWithLeastRSS: lower rss found: rss_arr["+i+"] = "+rss_arr[i]);
 		};
 	}
-	//console.log("kandinsky.findPointWithLeastRSS: arr["+pointIndex+"] = "+arr[pointIndex]);
 	return arr[pointIndex];
 }
 
@@ -160,32 +135,22 @@ function computeClusters() {
 	var minsedindex = 0;
 	clusters = [];
 	var tempsed = 0;
-	//console.log("computeClusters: vectors = ", JSON.stringify(vectors));
-	//console.log("computeClusters: centroids = ", JSON.stringify(centroids));
 	for (i = 0; i < numPoints; i++) {
-		//console.log("computeClusters: clustering vector[", i, "]")
 		sedArr = [];
 		for (j = 0; j < k; j++) {
-			//console.log("computeClusters: computing sed for centroid[", j, "] = ", JSON.stringify(centroids[j]));
 			tempsed = squaredEuclideanDistance(vectors[i], centroids[j]);
-			//console.log("computeClusters: sed for centroid[", j, "] = ", tempsed);
 			sedArr.push(tempsed);
 		}
-		//console.log("computeClusters: sedArr = ", JSON.stringify(sedArr));
 		minsed = sedArr[0];
 		minsedindex = 0;
 		for (j = 0; j < k; j++) {
-			// there is a bug here!!!!!
 			if (sedArr[j] < minsed) {
 				minsed = sedArr[j];
 				minsedindex = j;
 			}
 		}
-		//console.log("computeClusters: vector ", i, ": minsed = ", JSON.stringify(minsed));
-		//console.log("computeClusters: vector ", i, ": minsedindex = ", minsedindex);
 		clusters.push(minsedindex);
 	}
-	//console.log("computeClusters: clusters = " + JSON.stringify(clusters));
 }
 
 function compareCentroids() {
@@ -214,16 +179,10 @@ function compareCentroids() {
 		for (i = 0; i < cl; i++) {
 			centDist.push(Math.abs(Math.abs(oldCentRss[i]) - Math.abs(centRss[i])));
 		}
-		//console.log("compareCentroids - oldCentRss:" + JSON.stringify(oldCentRss));
-		//console.log("compareCentroids - centRss:" + JSON.stringify(centRss));
-		//console.log("compareCentroids - centDist:" + JSON.stringify(centDist));
-		//
 		for (i = 0; i < cl; i++) {
 			totalsumofcentroiddistance += centDist[i];
 		}
-		//console.log("compareCentroids - totalsumofcentroiddistance:" + totalsumofcentroiddistance);
 		centroidsHaveConverged = (totalsumofcentroiddistance == 0);
-		//console.log("compareCentroids: centroidsHaveConverged = " + centroidsHaveConverged);
 	}
 	return !centroidsHaveConverged;
 }
@@ -235,8 +194,6 @@ function quantizeColors(algorithmNameStr, colorArray, numberOfColors) {
 	}
 	return compute_kmeans(colorArray, numberOfColors);
 }
-/*return this;
-}();*/
 /*K Means:
         a. Pick K random centroids from array
         b. classify all points into clusters

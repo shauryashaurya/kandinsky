@@ -7,10 +7,7 @@
 		imagePreviewCanvas2dContext = imagePreviewCanvas.getContext("2d"),
 		colorSwatchContainerDiv = doc.getElementById("colorSwatchContainer"),
 		k = 5;
-	//console.log("win: ", win);
-	//console.log("doc: ", doc);
-	//console.log("self: ", self);
-	//kandinsky(win, doc);
+	
 	console.log("ready!");
 	// check if filereader and other apis are supported
 	if (window.File && window.FileReader && window.FileList && window.Blob && window.Worker) {
@@ -27,8 +24,8 @@
 		if (!imgData || imgData.length < 3) return [];
 		copy = [];
 		pixArr = [];
-		// dumbcopy imageData Uint8ClampedArray to regular array so splice can be used
-		while (++i < len) {
+        // dumbcopy imageData Uint8ClampedArray to regular array so splice can be used
+        while (++i < len) {
 			copy[i] = imgData[i];
 		}
 		//reset and loop again
