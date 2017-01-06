@@ -11,26 +11,39 @@ var oldCentRss = [];
 var proportions = [];
 var totaliter = 0;
 var initialized = false;
+var intertia = [];
+var jobCycle = 0;
+var colorResults = [];
 
 function compute_kmeans(vectors, k) {
 	self.vectors = vectors.slice();
 	self.k = k;
 	self.vectorLength = self.vectors[0].length;
+	for (jobCycle = 0; jobCycle < 10; jobCycle++) {
+		console.log(".");
+		//console.log("jobCycle: ", jobCycle);
+		colorResults.push(compute_kmeans_jobcycle(vectors, k));
+	}
+	return colorResults;
+}
+
+function compute_kmeans_jobcycle(vectors, k) {
 	self.centroids = [];
 	self.clusters = [];
 	initCentroids();
 	self.oldCentroids = [];
-	totaliter = 0;
-	while (compareCentroids() && totaliter < 1000) {
+	while (!compareCentroids() && totaliter < 300) {
 		totaliter++;
-		//console.log("******* iteration # ", totaliter, "********");
+		intertia[jobCycle] = totaliter;
+		//console.log("jobCycle: ", jobCycle,": iteration: ", totaliter);
 		computeClusters();
 		pickCentroids();
 	}
 	return {
 		'colors': centroids,
 		'ratio': getRatioArr(),
-		'iterations': totaliter
+		'iterations': totaliter,
+		'intertia': JSON.stringify(intertia)
 	};
 }
 
@@ -42,7 +55,7 @@ function getRatioArr() {
 	//console.log("getRatioArr: centroids.length = ",centlen);
 	//console.log("getRatioArr: vectors.length = ",veclen);
 	for (i = 0; i < centlen; i++) {
-	//console.log("getRatioArr: centclusters[",i,"] = ",centclusters[i].length);
+		//console.log("getRatioArr: centclusters[",i,"] = ",centclusters[i].length);
 		ratioArr.push((centclusters[i].length / veclen) * 100);
 	}
 	//console.log("getRatioArr: centroids.length = ",centlen);
@@ -55,12 +68,16 @@ function initCentroids() {
 	// if vector already exists then
 	// pick another random vector
 	// else add vector to centroid array
+	// initialize iterations for this jobCycle
+	totaliter = 0;
 	var i = 0;
 	var i2 = 0;
 	var randPointIndex = 0;
 	var pointrepeats = false;
 	var pointrepeatsIterationCount = 0;
 	var veclen = vectors.length;
+	var seedSimilarityToleranceInOneDimension = 16;
+	var seedSimilarityTolerance = 3 * seedSimilarityToleranceInOneDimension * seedSimilarityToleranceInOneDimension;
 	self.centroids = [];
 	for (i = 0; i < k; i++) {
 		randPointIndex = Math.round(veclen * Math.random());
@@ -74,7 +91,12 @@ function initCentroids() {
 				randPointIndex = Math.round(veclen * Math.random());
 				pointrepeatsIterationCount++;
 				for (var j = 0; j < centroids.length; j++) {
-					pointrepeats = pointrepeats && (squaredEuclideanDistance(centroids[j], vectors[randPointIndex]) === 0);
+					// ensure that points are not exactly alike, use this only with monochrome images or images with low color contrast/vibrance.
+					//pointrepeats = pointrepeats && (squaredEuclideanDistance(centroids[j], vectors[randPointIndex]) === 0);
+					// ensure that points are not minimally similar - this should work for most images 
+					//pointrepeats = pointrepeats && (squaredEuclideanDistance(centroids[j], vectors[randPointIndex]) <= 1000);
+					// use tolerance here.
+					pointrepeats = pointrepeats && (squaredEuclideanDistance(centroids[j], vectors[randPointIndex]) <= seedSimilarityTolerance);
 				}
 			}
 		}
@@ -106,7 +128,6 @@ function pickCentroids() {
 	for (i = 0; i < lenclust; i++) {
 		centclusters[clusters[i]].push(JSON.parse(JSON.stringify(self.vectors[i])));
 	}
-	
 	for (i = 0; i < k; i++) {
 		centroids.push(findPointWithLeastRSS(centclusters[i]));
 	}
@@ -206,7 +227,10 @@ function compareCentroids() {
 		//console.log("compareCentroids: totalsumofcentroiddistance: ", totalsumofcentroiddistance);
 		//console.log("compareCentroids: centroidsHaveConverged: ", JSON.stringify(centroidsHaveConverged));
 	}
-	return !centroidsHaveConverged;
+	/*if (centroidsHaveConverged) {
+		jobCycle++;
+	}*/
+	return centroidsHaveConverged;
 }
 var algorithmNameStrings = ["kMeans"];
 

@@ -6,7 +6,7 @@
 		imagePreviewCanvas = doc.getElementById("imagePreview"),
 		imagePreviewCanvas2dContext = imagePreviewCanvas.getContext("2d"),
 		colorSwatchContainerDiv = doc.getElementById("colorSwatchContainer"),
-		k = 9;
+		k = 5;
 	
 	console.log("ready!");
 	// check if filereader and other apis are supported
