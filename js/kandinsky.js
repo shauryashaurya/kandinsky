@@ -76,8 +76,9 @@ function initCentroids() {
 	var pointrepeats = false;
 	var pointrepeatsIterationCount = 0;
 	var veclen = vectors.length;
-	var seedSimilarityToleranceInOneDimension = 16;
+	var seedSimilarityToleranceInOneDimension = 32;
 	var seedSimilarityTolerance = 3 * seedSimilarityToleranceInOneDimension * seedSimilarityToleranceInOneDimension;
+	//console.log("initCentroids: seedSimilarityTolerance =", seedSimilarityTolerance);
 	self.centroids = [];
 	for (i = 0; i < k; i++) {
 		randPointIndex = Math.round(veclen * Math.random());
@@ -96,6 +97,8 @@ function initCentroids() {
 					// ensure that points are not minimally similar - this should work for most images 
 					//pointrepeats = pointrepeats && (squaredEuclideanDistance(centroids[j], vectors[randPointIndex]) <= 1000);
 					// use tolerance here.
+					//seedSimilarityTolerance = 3 * seedSimilarityToleranceInOneDimension * seedSimilarityToleranceInOneDimension;
+					//console.log("initCentroids: seedSimilarityTolerance =", seedSimilarityTolerance);
 					pointrepeats = pointrepeats && (squaredEuclideanDistance(centroids[j], vectors[randPointIndex]) <= seedSimilarityTolerance);
 				}
 			}
