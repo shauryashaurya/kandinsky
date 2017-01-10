@@ -176,14 +176,17 @@ function pickCentroids() {
 	/*for (i = 0; i < lenclust; i++) {
 		centclusters[clusters[i]].push(JSON.parse(JSON.stringify(self.vectors[i])));
 	}*/
+	//*********THIS NEEDS TO BE FIXED*********
 	for (i = 0; i < lenclust; i++) {
 		tempIndex = clusters[i];
-		self.centclusters[tempIndex].push(self.vectors[i]);
+		self.centclusters[tempIndex].push(JSON.stringify(self.vectors[i]));
 	}
 	for (i = 0; i < k; i++) {
 		centroids.push(findPointWithLeastRSS(centclusters[i]));
 	}
-	//console.log("pickCentroids: centroids: ", JSON.stringify(centroids));
+	console.log("pickCentroids: centroids: ", JSON.stringify(centroids));
+	//*********RIGHT UPTILL HERE.*********
+	
 }
 
 function findPointWithLeastRSS(arr) {
@@ -198,9 +201,13 @@ function findPointWithLeastRSS(arr) {
 	}
 	var arr_len = arr.length;
 	var i = 0;
+	var tempArr = [];
+	for (i = 0; i < arr_len; i++) {
+		tempArr.push(JSON.parse(arr[i]));
+	} 
 	// find rss for all points in the array
 	for (i = 0; i < arr_len; i++) {
-		rss_arr.push(residualSumOfSquares(arr, arr[i]))
+		rss_arr.push(residualSumOfSquares(tempArr, tempArr[i]))
 	}
 	//console.log("findPointWithLeastRSS: rss_arr: ", JSON.stringify(rss_arr));
 	min_rss = rss_arr[0];
