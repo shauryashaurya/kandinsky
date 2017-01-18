@@ -1,17 +1,19 @@
 //assumes points have 3 coordinates
-var squareOfDifference = function(a, b) {
+function squareOfDifference(a, b) {
 	return ((b - a) * (b - a));
 }
-var squaredEuclideanDistance = function(pointA, pointB) {
-		var i = 0;
-		var distance = 0;
-		for (i = 0; i < 4; i++) {
-			distance += squareOfDifference(pointA[i], pointB[i]);
-		}
-		return distance;
+
+function squaredEuclideanDistance(pointA, pointB) {
+	var i = 0;
+	var distance = 0;
+	var dimensions = pointA.length;
+	for (i = 0; i < dimensions; i++) {
+		distance += squareOfDifference(pointA[i], pointB[i]);
 	}
-	//
-var residualSumOfSquares = function(arr, centroid) {
+	return distance;
+}
+//
+function residualSumOfSquares(arr, centroid) {
 	var rss = 0;
 	var len = arr.length;
 	var i = 0;
@@ -21,7 +23,30 @@ var residualSumOfSquares = function(arr, centroid) {
 	return rss;
 };
 //
-var arithmeticMeanCenter = function(arr) {
+function geometricMedian(arr) {
+	//TODO: build this function using array.map and array.reduce
+    var len = arr.length;
+    var i = 0;
+    var j = 0;
+    var rssArr = [];
+    var minrss = 0;
+    var minIndex = 0;
+    //first calculate the rss for each point in arr
+    for (i = 0; i < len; i++) {
+        rssArr[i] = residualSumOfSquares(arr, arr[i]);
+    }
+    //then find the index of the point with minimum rss
+    minrss = rssArr[0];
+    for (i = 0; i < len; i++) {
+        if (minrss > rssArr[i]) {
+            minrss = rssArr[i];
+            minIndex = i;
+        }
+    }
+	return arr[minIndex];
+};
+//
+function arithmeticMeanCenter(arr) {
 	var len = arr.length;
 	var i = 0;
 	var rsum = 0;
@@ -35,7 +60,7 @@ var arithmeticMeanCenter = function(arr) {
 	return [Math.round(rsum / len), Math.round(gsum / len), Math.round(bsum / len)];
 };
 //
-var geometricMeanCenter = function(arr) {
+function geometricMeanCenter(arr) {
 	var len = arr.length;
 	var i = 0;
 	var rlogsum = 0;
