@@ -15,12 +15,16 @@ var intertia = [];
 var jobCycle = 0;
 var colorResults = [];
 var tempInterval = 0;
+var maxJobCycles = 2;
+var maxTotalIterations = 3;
+var maxIterationsBeforeReducingK = 10;
+var kIteration = 0;
 
 function compute_kmeans(vectors, k) {
 	self.vectors = vectors.slice();
 	self.k = k;
 	self.vectorLength = self.vectors[0].length;
-	for (jobCycle = 0; jobCycle < 10; jobCycle++) {
+	for (jobCycle = 0; jobCycle < maxJobCycles; jobCycle++) {
 		colorResults.push(compute_kmeans_jobcycle(vectors, k));
 	}
 	return colorResults;
@@ -31,11 +35,26 @@ function compute_kmeans_jobcycle(vectors, k) {
 	self.clusters = [];
 	initCentroids();
 	self.oldCentroids = [];
-	while (!compareCentroids() && totaliter < 500) {
+	while (!compareCentroids() && totaliter < maxTotalIterations) {
 		totaliter++;
 		intertia[jobCycle] = totaliter;
-		computeClusters();
-		pickCentroids();
+		//if there's a bunch of empty clusters then try a better set of initial clusters
+		if (computeClusters()) {
+			console.log("compute_kmeans_jobcycle: computeClusters ", true);
+			pickCentroids();
+		} else {
+			console.log("compute_kmeans_jobcycle: computeClusters ", false, "reinitializing clusters");
+			self.kIteration++;
+			console.log("compute_kmeans_jobcycle: kIteration ", kIteration);
+			if (kIteration < maxIterationsBeforeReducingK && k > 1) {
+				k--;
+				console.log("compute_kmeans_jobcycle: K updated to ", k);
+			}
+			if (k == 1) {
+				break;
+			};
+			initCentroids();
+		};
 	}
 	return {
 		'colors': centroids,
@@ -125,13 +144,8 @@ function initCentroids() {
 				}
 			}
 		}
-		self.centroids[i] = [];
-		for (i2 = 0; i2 < self.vectors[randPointIndex].length; i2++) {
-			self.centroids[i].push(self.vectors[randPointIndex][i2]);
-		}
+		self.centroids[i] = self.vectors[randPointIndex];
 	}
-	console.log("initCentroids: centroids.length: ", JSON.stringify(centroids.length));
-	console.log("initCentroids: centroids: ", JSON.stringify(centroids));
 }
 
 function backupAndRefreshCentroids() {
@@ -153,110 +167,40 @@ function backupAndRefreshCentroidRss() {
 }
 
 function pickCentroids() {
-	//take RGB data clustered around old centroids and find new centroids for the clusters
-	//this one's going to be a bit complicated - we need to compute the median and not the average.
-	//the median is the point with the least RSS in a cluster
-	// loop on clusters array
-	// pick id of centroid and create an array of arrays, each carrying the point data
-	// loop through this new array
-	// findPointwithleastrss for each
-	centclusters = [];
-	// the clusters array stores the indices of centroids each point in the vectors array is associated with
-	//var lenclust = self.clusters.length; // since clusters is an array of the same size as vectors, this should be equal to self.vectors.length
-	var lenclust = self.vectors.length; // since clusters is an array of the same size as vectors, this should be equal to self.vectors.length
 	var i = 0;
-	var i2 = 0;
-	//oldCentroids = [];
-	var tempVector = [];
-	var tempIndex = 0;
-	// first copy centorids to oldCentroids so that these can be compared later and also initialize centclusters
 	backupAndRefreshCentroids();
 	for (i = 0; i < k; i++) {
-		centclusters.push([]);
-	}
-	// now cycle through the clusters array to pick vectors for each centroid
-	for (i = 0; i < lenclust; i++) {
-		centclusters[clusters[i]].push(self.vectors[i]);
-	}
-	/*console.log("pickCentroids: number of vectors for each cluster: ", JSON.stringify(centclusters.map(function(e) {
-		return e.length;
-	})));*/
-	//There are centroids left over to which no point is related anymore, this should not happen...
-	for (i = 0; i < k; i++) {
-		/*if (centclusters[i].length == 0) {
-			console.log("pickCentroids: Centroids with no related vectors found");
-			console.log("pickCentroids: Centroids.length: ", JSON.stringify(centroids.length));
-			console.log("pickCentroids: Centroids: ", JSON.stringify(centroids));
-			
-		}*/
-		//centroids.push(findPointWithLeastRSS(JSON.stringify(centclusters[i])));
 		centroids.push(geometricMedian(centclusters[i]));
 	}
 }
-/*function findPointWithLeastRSS(arrJSONString) {
-	var arr = JSON.parse(arrJSONString);
-	var point = arr[0];
-	var rss_arr = [];
-	var min_rss = 0;
-	var pointIndex = 0;
-	if (typeof arr[pointIndex] == "undefined") {
-		console.log("findPointWithLeastRSS: 1 : arr: ", JSON.stringify(arr));
-	}
-	var arr_len = arr.length;
-	var i = 0;
-	var tempArr = [];
-	for (i = 0; i < arr_len; i++) {
-		tempArr.push(arr[i]);
-	}
-	// find rss for all points in the array
-	for (i = 0; i < arr_len; i++) {
-		rss_arr.push(residualSumOfSquares(tempArr, tempArr[i]))
-	}
-	min_rss = rss_arr[0];
-	for (i = 0; i < arr_len; i++) {
-		if (min_rss < rss_arr[i]) {
-			min_rss = rss_arr[i];
-			pointIndex = i;
-		};
-	}
-	return arr[pointIndex];
-}*/
+
 function computeClusters() {
-	//take a set of centroids and classify each point around one of the centroids
-	//note the count for each cluster - this gives you the number of points associated to each centroid
-	//return [newCentroids, clustercount];
-	// for each pixel in the image - compute squaredEuclideanDistance and associate with the centroid that has least sed
-	// loop on each pixel
-	// loop on each centroid
-	// compute sed
-	// loop on each centroid
-	// find minimum sed
-	// push centroid id into clusters array
 	var numPoints = vectors.length;
-	var sedArr = [];
+	var tempArr = [];
 	var i = 0;
 	var j = 0;
 	var minsed = 0;
 	var minsedindex = 0;
+	var tumbdumb = 0;
+	//
 	clusters = [];
-	var tempsed = 0;
-	for (i = 0; i < numPoints; i++) {
-		sedArr = [];
-		for (j = 0; j < k; j++) {
-			tempsed = squaredEuclideanDistance(self.vectors[i], self.centroids[j]);
-			sedArr.push(tempsed);
-		}
-		minsed = sedArr[0];
-		minsedindex = 0;
-		for (j = 0; j < k; j++) {
-			if (sedArr[j] < minsed) {
-				minsed = sedArr[j];
-				minsedindex = j;
-			}
-		}
-		//console.log("computeClusters: minsedindex = ", minsedindex);
-		clusters.push(minsedindex);
+	centclusters = [];
+	for (i = 0; i < k; i++) {
+		centclusters.push([]);
 	}
+	for (i = 0; i < numPoints; i++) {
+		minsedindex = centroids.map((e) => (squaredEuclideanDistance(self.vectors[i], e))).reduce((iMin, x, i, a) => ((x == Math.min(x, a[iMin])) ? iMin : i), 0);
+		clusters.push(minsedindex);
+		centclusters[minsedindex].push(i);
+	}
+	tempArr = centclusters.map((e) => e.length);
+	for (i = 0; i < k; i++) {
+		if (tempArr[i] == 0) {
+			tumbdumb = Math.round(Math.random() * numPoints);
+			centroids[i] = (self.vectors[tumbdumb]);
+		}
+	}
+	return !(true && tempArr.reduce((isZero, x, i, a) => ((x.length == 0) ? false : true), true));
 }
 
 function compareCentroids() {
@@ -264,23 +208,14 @@ function compareCentroids() {
 	//how? their residual sum of squares is minimum or has not changed much
 	var centroidsHaveConverged = false;
 	var i = 0;
-	//var cl = centroids.length;//why not just use k here?
 	var centDist = [];
 	var totalsumofcentroiddistance = 0;
 	//
-	//oldCentRss = [];
 	// 'old' DS don't exist for the first iteration, so cannot compare, hence do this from iteration 2 onwards.
 	if (totaliter > 1) {
 		backupAndRefreshCentroidRss();
-		// first move current RSS to old
-		/*for (i = 0; i < k; i++) {
-			oldCentRss.push(centRss[i]);
-		}
-		centRss = [];*/
-		//  calculate the new RSS
 		for (i = 0; i < k; i++) {
 			centRss.push(residualSumOfSquares(centclusters[i], centroids[i]));
-			//oldCentRss.push(residualSumOfSquares(centclusters[i], oldCentroids[i]));
 		}
 		// now eval the diff for each centroid
 		for (i = 0; i < k; i++) {

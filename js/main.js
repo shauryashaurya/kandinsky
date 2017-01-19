@@ -39,12 +39,12 @@
 	var analyzeImage = function() {
 		var imageData = imagePreviewCanvas2dContext.getImageData(0, 0, imagePreviewCanvas.width, imagePreviewCanvas.height);
 		var pixelChunks = getPixelChunks(imageData.data);
-		imageColors = quantizeColors("kmeans", pixelChunks, k);
-		console.log("analyzeImage: imageColors: ", JSON.stringify(imageColors));
-		drawColors(imageColors);
-	}
+		//imageColors = quantizeColors("kmeans", pixelChunks, k);
+        drawColors(quantizeColors("kmeans", pixelChunks, k));
+    }
 
-	function drawColors(colors) {
+    function drawColors(colors) {
+		console.log("analyzeImage: colors: ", JSON.stringify(colors));
 		var ii = 0;
 		var jj = 0;
 		for (ii = 0; ii < colors.length; ii++) {
