@@ -16,7 +16,7 @@ var jobCycle = 0;
 var colorResults = [];
 var tempInterval = 0;
 var maxJobCycles = 10;
-var maxTotalIterations = 300;
+var maxTotalIterations = 50;
 var maxIterationsBeforeReducingK = 50;
 var kIteration = 0;
 
@@ -28,9 +28,42 @@ function compute_kmeans(vectors, k) {
 	}
 	self.vectorLength = self.vectors[0].length;
 	for (jobCycle = 0; jobCycle < maxJobCycles; jobCycle++) {
-		colorResults.push(compute_kmeans_jobcycle(vectors, k));
+		setTimeout(colorResults.push(compute_kmeans_jobcycle(vectors, k)), 10000);
 	}
-	return colorResults;
+	return filterColors(colorResults);
+}
+
+function filterColors(c) {
+	console.log("filterColors: c: ", JSON.stringify(c));
+	var unique = [];
+	var tolerance = 16;
+	var toleranceSphere = 3 * tolerance * tolerance;
+	console.log("filterColors: toleranceSphere: ", toleranceSphere);
+	var row = 0;
+	var col = 0;
+	var j = 0;
+	var maxLoopCycles = k * maxJobCycles;
+	var m = 0;
+	var n = 0;
+	var isUnique = true;
+	var tempSed = 0;
+	unique.push(c[0]["colors"][0]);
+	for (row = 0; row < maxJobCycles; row++) {
+		for (col = 0; col < k; col++) {
+			isUnique = true;
+			for (j = 0; j < unique.length; j++) {
+				tempSed = squaredEuclideanDistance(unique[j], c[row]["colors"][col]);
+				isUnique = isUnique && (tempSed > toleranceSphere);
+			}
+			if (isUnique) {
+				unique.push(c[row]["colors"][col]);
+			}
+		}
+	}
+	return {
+		'allColors': c,
+		'unique': unique,
+	};
 }
 
 function compute_kmeans_jobcycle(vectors, k) {

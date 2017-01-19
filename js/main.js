@@ -6,7 +6,7 @@
 		imagePreviewCanvas = doc.getElementById("imagePreview"),
 		imagePreviewCanvas2dContext = imagePreviewCanvas.getContext("2d"),
 		colorSwatchContainerDiv = doc.getElementById("colorSwatchContainer"),
-		k = 5;
+		k = 11;
 	var imageColors = {};
 	console.log("ready!");
 	// check if filereader and other apis are supported
@@ -40,32 +40,60 @@
 		var imageData = imagePreviewCanvas2dContext.getImageData(0, 0, imagePreviewCanvas.width, imagePreviewCanvas.height);
 		var pixelChunks = getPixelChunks(imageData.data);
 		//imageColors = quantizeColors("kmeans", pixelChunks, k);
-        drawColors(quantizeColors("kmeans", pixelChunks, k));
-    }
+		drawColors(quantizeColors("kmeans", pixelChunks, k));
+	}
 
-    function drawColors(colors) {
+	function drawColors(colors) {
 		console.log("analyzeImage: colors: ", JSON.stringify(colors));
 		var ii = 0;
 		var jj = 0;
-		for (ii = 0; ii < colors.length; ii++) {
-			for (jj = 0; jj < colors[ii]["colors"].length; jj++) {
+		for (jj = 0; jj < colors["unique"].length; jj++) {
+			var div = document.createElement("div");
+			div.style.width = "100px";
+			div.style.height = "100px";
+			div.style.display = 'inline-block';
+			div.style.background = "rgba(" + colors["unique"][jj].join(",") + ")";
+			//div.style.color = "white";
+			div.innerHTML = colors["unique"][jj].join(",");
+			colorSwatchContainerDiv.appendChild(div);
+			console.log("analyzeImage: (", jj, " % 4): ", (jj % 4));
+			if ((jj % 4 == 0) ) {
+				var unique_div_spacer = document.createElement("unique_div_spacer");
+				unique_div_spacer.style.width = "0px";
+				unique_div_spacer.style.height = "0px";
+				unique_div_spacer.style.background = "rgba(255,255,255,255)";
+				unique_div_spacer.style.display = 'block';
+				console.log("analyzeImage: creating block spacer");
+				colorSwatchContainerDiv.appendChild(unique_div_spacer);
+			}
+		}
+		var div_spacer = document.createElement("div_spacer");
+		div_spacer.style.width = "100px";
+		div_spacer.style.height = "30px";
+		div_spacer.style.background = "rgba(255,255,255,255)";
+		div_spacer.style.display = 'block';
+		//div_spacer.style.color = "white";
+		//div_spacer.innerHTML = "-----";
+		colorSwatchContainerDiv.appendChild(div_spacer);
+		for (ii = 0; ii < colors["allColors"].length; ii++) {
+			for (jj = 0; jj < colors["allColors"][ii]["colors"].length; jj++) {
 				var div = document.createElement("div");
 				div.style.width = "100px";
 				div.style.height = "100px";
 				div.style.display = 'inline-block';
-				div.style.background = "rgba(" + colors[ii]["colors"][jj].join(",") + ")";
+				div.style.background = "rgba(" + colors["allColors"][ii]["colors"][jj].join(",") + ")";
 				//div.style.color = "white";
-				div.innerHTML = colors[ii]["colors"][jj].join(",");
+				div.innerHTML = colors["allColors"][ii]["colors"][jj].join(",");
 				colorSwatchContainerDiv.appendChild(div);
 			}
-			var div_spacer = document.createElement("div_spacer");
-			div_spacer.style.width = "100px";
-			div_spacer.style.height = "30px";
-			div_spacer.style.background = "rgba(255,255,255,255)";
-			div_spacer.style.display = 'block';
-			//div_spacer.style.color = "white";
-			div_spacer.innerHTML = "-----";
-			colorSwatchContainerDiv.appendChild(div_spacer);
+			var div_spacer2 = document.createElement("div_spacer2");
+			div_spacer2.style.width = "100px";
+			div_spacer2.style.height = "30px";
+			div_spacer2.style.background = "rgba(255,255,255,255)";
+			div_spacer2.style.display = 'block';
+			//div_spacer2.style.color = "white";
+			//div_spacer2.innerHTML = "-----";
+			colorSwatchContainerDiv.appendChild(div_spacer2);
 		}
 	}
 
