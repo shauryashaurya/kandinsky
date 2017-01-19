@@ -15,9 +15,9 @@ var intertia = [];
 var jobCycle = 0;
 var colorResults = [];
 var tempInterval = 0;
-var maxJobCycles = 2;
-var maxTotalIterations = 3;
-var maxIterationsBeforeReducingK = 10;
+var maxJobCycles = 10;
+var maxTotalIterations = 300;
+var maxIterationsBeforeReducingK = 50;
 var kIteration = 0;
 
 function compute_kmeans(vectors, k) {
@@ -25,7 +25,7 @@ function compute_kmeans(vectors, k) {
 	self.k = k;
 	self.vectorLength = self.vectors[0].length;
 	for (jobCycle = 0; jobCycle < maxJobCycles; jobCycle++) {
-		colorResults.push(compute_kmeans_jobcycle(vectors, k));
+		setTimeout(colorResults.push(compute_kmeans_jobcycle(vectors, k)), 3000);
 	}
 	return colorResults;
 }
@@ -40,15 +40,12 @@ function compute_kmeans_jobcycle(vectors, k) {
 		intertia[jobCycle] = totaliter;
 		//if there's a bunch of empty clusters then try a better set of initial clusters
 		if (computeClusters()) {
-			console.log("compute_kmeans_jobcycle: computeClusters ", true);
 			pickCentroids();
 		} else {
-			console.log("compute_kmeans_jobcycle: computeClusters ", false, "reinitializing clusters");
 			self.kIteration++;
-			console.log("compute_kmeans_jobcycle: kIteration ", kIteration);
-			if (kIteration < maxIterationsBeforeReducingK && k > 1) {
+			if (kIteration >= maxIterationsBeforeReducingK && k > 1) {
 				k--;
-				console.log("compute_kmeans_jobcycle: K updated to ", k);
+				kIteration = 0;
 			}
 			if (k == 1) {
 				break;
@@ -218,13 +215,14 @@ function compareCentroids() {
 			centRss.push(residualSumOfSquares(centclusters[i], centroids[i]));
 		}
 		// now eval the diff for each centroid
-		for (i = 0; i < k; i++) {
+		/*for (i = 0; i < k; i++) {
 			centDist.push(Math.abs(Math.abs(oldCentRss[i]) - Math.abs(centRss[i])));
 		}
 		for (i = 0; i < k; i++) {
 			totalsumofcentroiddistance += centDist[i];
-		}
-		centroidsHaveConverged = (totalsumofcentroiddistance == 0);
+		}*/
+		//centroidsHaveConverged = (totalsumofcentroiddistance == 0);
+		centroidsHaveConverged = (JSON.stringify(oldCentRss) == JSON.stringify(centRss));
 	}
 	return centroidsHaveConverged;
 }
