@@ -16,8 +16,8 @@ var jobCycle = 0;
 var colorResults = [];
 var tempInterval = 0;
 var maxJobCycles = 10;
-var maxTotalIterations = 50;
-var maxIterationsBeforeReducingK = 50;
+var maxTotalIterations = 25;
+var maxIterationsBeforeReducingK = 10;
 var kIteration = 0;
 
 function compute_kmeans(vectors, k) {

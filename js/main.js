@@ -6,9 +6,9 @@
 		imagePreviewCanvas = doc.getElementById("imagePreview"),
 		imagePreviewCanvas2dContext = imagePreviewCanvas.getContext("2d"),
 		colorSwatchContainerDiv = doc.getElementById("colorSwatchContainer"),
-		k = 11;
+		k = 9;
 	var imageColors = {};
-	console.log("ready!");
+	//console.log("ready!");
 	// check if filereader and other apis are supported
 	if (window.File && window.FileReader && window.FileList && window.Blob && window.Worker) {
 		// Great success! All the File APIs are supported.
@@ -44,26 +44,26 @@
 	}
 
 	function drawColors(colors) {
-		console.log("analyzeImage: colors: ", JSON.stringify(colors));
+		//console.log("analyzeImage: colors: ", JSON.stringify(colors));
 		var ii = 0;
 		var jj = 0;
 		for (jj = 0; jj < colors["unique"].length; jj++) {
 			var div = document.createElement("div");
-			div.style.width = "100px";
-			div.style.height = "100px";
+			div.style.width = "200px";
+			div.style.height = "200px";
 			div.style.display = 'inline-block';
 			div.style.background = "rgba(" + colors["unique"][jj].join(",") + ")";
 			//div.style.color = "white";
 			div.innerHTML = colors["unique"][jj].join(",");
 			colorSwatchContainerDiv.appendChild(div);
-			console.log("analyzeImage: (", jj, " % 4): ", (jj % 4));
-			if ((jj % 4 == 0) ) {
+			//console.log("analyzeImage: 4-(", jj, " % 4): ", 4 - (jj % 4));
+			if (((5 - (jj % 5)) == 1)) {
 				var unique_div_spacer = document.createElement("unique_div_spacer");
 				unique_div_spacer.style.width = "0px";
 				unique_div_spacer.style.height = "0px";
 				unique_div_spacer.style.background = "rgba(255,255,255,255)";
 				unique_div_spacer.style.display = 'block';
-				console.log("analyzeImage: creating block spacer");
+				//console.log("analyzeImage: creating block spacer");
 				colorSwatchContainerDiv.appendChild(unique_div_spacer);
 			}
 		}
