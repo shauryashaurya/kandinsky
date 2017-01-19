@@ -1,4 +1,4 @@
-# kandinsky
+# Kandinsky
 Picasso, Caravaggio, Anthony Van Dyck, Pollock? 
 What colors did they choose? Can we reverse-engineer their palettes?  
 How about your favorite colors from your favorite sunset?  
