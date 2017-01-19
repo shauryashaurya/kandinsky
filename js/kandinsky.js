@@ -28,7 +28,7 @@ function compute_kmeans(vectors, k) {
 	}
 	self.vectorLength = self.vectors[0].length;
 	for (jobCycle = 0; jobCycle < maxJobCycles; jobCycle++) {
-		setTimeout(colorResults.push(compute_kmeans_jobcycle(vectors, k)), 3000);
+		colorResults.push(compute_kmeans_jobcycle(vectors, k));
 	}
 	return colorResults;
 }
