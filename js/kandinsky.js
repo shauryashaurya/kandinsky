@@ -23,6 +23,9 @@ var kIteration = 0;
 function compute_kmeans(vectors, k) {
 	self.vectors = vectors.slice();
 	self.k = k;
+	if (!k) {
+		k = 3;
+	}
 	self.vectorLength = self.vectors[0].length;
 	for (jobCycle = 0; jobCycle < maxJobCycles; jobCycle++) {
 		setTimeout(colorResults.push(compute_kmeans_jobcycle(vectors, k)), 3000);
