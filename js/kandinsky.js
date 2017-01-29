@@ -3,7 +3,7 @@
 // each time there's atleast one centroid with zero vectors associated with it
 // what to do when you discover a centroid with zero vectors associated?
 // how to determine if the image has fewer colors than k?
-// implement pickcentroids so that it can handle zero length clusters - DONE
+// implement pickcentroids so that it can handle zero length clusters
 // the code is hardly readable and not very easy to maintain, fix that
 // performance needs to increase by 10x atleast
 var self = this;
@@ -24,9 +24,9 @@ var intertia = [];
 var jobCycle = 0;
 var colorResults = [];
 var tempInterval = 0;
-var maxJobCycles = 9;
-var maxTotalIterations = 5;
-var maxIterationsBeforeReducingK = 30;
+var maxJobCycles = 11;
+var maxTotalIterations = 14;
+var maxIterationsBeforeReducingK = 5;
 var kIteration = 0;
 var tolerance = 24;
 var unique = [];
@@ -50,7 +50,7 @@ function compute_kmeans(vectors, k) {
 	colorResults = [];
 	self.vectorLength = self.vectors[0].length;
 	for (jobCycle = 0; jobCycle < maxJobCycles; jobCycle++) {
-		setTimeout(colorResults.push(compute_kmeans_jobcycle(vectors, k)), 10000);
+		setTimeout(colorResults.push(compute_kmeans_jobcycle(vectors, k)), 15000);
 	}
 	finalResult = filterColors(colorResults);
 	return finalResult;
@@ -298,11 +298,11 @@ function pickCentroids() {
 	var i = 0;
 	backupAndRefreshCentroids();
 	for (i = 0; i < k; i++) {
-		if (centclusters[i].length > 0) {
+		//if (centclusters[i].length > 0) {
 			centroids.push(geometricMedian(centclusters[i]));
-		} else {
-			centroids.push(0);
-		}
+		//} else {
+		//	centroids.push(0);
+		//}
 	}
 	var t1 = performance.now();
 	timearray_pickCentroids.push(t1 - t0);
@@ -345,7 +345,7 @@ function computeClusters() {
 	//console.log("computeClusters: tempArr: ", JSON.stringify(tempArr));
 	//console.log("computeClusters: tempArr.reduce((isZero, x, i, a) => ", tempArr.reduce((isZero, x, i, a) => (isZero&&((x.length == 0) ? false : true)), true));
 	//console.log("computeClusters: shouldPickCentroids = ", shouldPickCentroids);
-	return (shouldPickCentroids);
+	return (!shouldPickCentroids);
 }
 
 function compareCentroids() {

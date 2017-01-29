@@ -6,7 +6,7 @@
 		imagePreviewCanvas = doc.getElementById("imagePreview"),
 		imagePreviewCanvas2dContext = imagePreviewCanvas.getContext("2d"),
 		colorSwatchContainerDiv = doc.getElementById("colorSwatchContainer"),
-		k = 11;
+		k = 13;
 	var imageColors = {};
 	//console.log("ready!");
 	// check if filereader and other apis are supported
@@ -53,7 +53,7 @@
 		var numColors = colors["unique"].length;
 		var colors_sorted = new Array(numColors);
 		var ratios_sorted = new Array(numColors);
-		var maxSwatchesInARow = 5;
+		var maxSwatchesInARow = 5; //use numColors for all swatches in a single row
 		var numRowsNeeded = Math.ceil(numColors / maxSwatchesInARow);
 		var maxSwatchWidth = 200;
 		var maxSwatchHeight = 500;
@@ -80,7 +80,7 @@
 				value2: colors["unique"][i]
 			};
 		}).sort(function(a, b) {
-			return ((a.value1 < b.value1) ? -1 : ((a.value1 == b.value1) ? 0 : 1));
+			return ((a.value1 > b.value1) ? -1 : ((a.value1 == b.value1) ? 0 : 1));
 		}).forEach(function(v, i) {
 			ratios_sorted[i] = v.value1;
 			colors_sorted[i] = v.value2;
