@@ -104,7 +104,11 @@
 			div.style.width = "200px";
 			div.style.height = h + "px";
 			div.style.display = 'inline-block';
-			div.style.background = "rgba(" + colors["unique"][jj].join(",") + ")";
+            //div.style.background = "rgba(" + colors["unique"][jj].join(",") + ")";
+			div.style.background = "rgba(" + colors_sorted[jj].join(",") + ")";
+            console.log("drawColors: colors[\"unique\"][",jj,"] = ",colors["unique"][jj].join(","));
+            console.log("drawColors: colors_sorted[",jj,"] = ",colors_sorted[jj].join(","));
+
 			//div.style.border = "thin solid " + "rgb(" + colors_sorted[jj].slice(0, 3).join(",") + ")";
 			div.style.borderRadius = roundedCornerRadius + "px";
 			div.style.color = "white";

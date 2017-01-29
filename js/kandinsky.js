@@ -6,6 +6,7 @@
 // implement pickcentroids so that it can handle zero length clusters
 // the code is hardly readable and not very easy to maintain, fix that
 // performance needs to increase by 10x atleast
+// bug - the colors displayed are not the same as the colors rendered, the rendered ones seem correct.
 var self = this;
 var vectors = [];
 var clusters_bak = [];
