@@ -23,26 +23,43 @@ function residualSumOfSquares(arr, centroid) {
 	return rss;
 };
 //
+function normalizeArray(arr) {
+	//console.log("normalizeArray: incoming: ", JSON.stringify(arr));
+	var l = arr.length;
+	var i = 0;
+	var sum = 0;
+	for (i = 0; i < l; i++) {
+		sum = sum + arr[i];
+	}
+	for (i = 0; i < l; i++) {
+		//return results at are accurate to atleast six decimal places
+		arr[i] = ((arr[i] * 1000000) / sum) / 1000000;
+	}
+	//console.log("normalizeArray: normalized: ", JSON.stringify(arr));
+	//console.log("normalizeArray: normalized sum= ", JSON.stringify(arr.reduce(function(a, b) {		return a + b;	}, 0)));
+	return arr;
+}
+//
 function geometricMedian(arr) {
 	//TODO: build this function using array.map and array.reduce
-    var len = arr.length;
-    var i = 0;
-    var j = 0;
-    var rssArr = [];
-    var minrss = 0;
-    var minIndex = 0;
-    //first calculate the rss for each point in arr
-    for (i = 0; i < len; i++) {
-        rssArr[i] = residualSumOfSquares(arr, arr[i]);
-    }
-    //then find the index of the point with minimum rss
-    minrss = rssArr[0];
-    for (i = 0; i < len; i++) {
-        if (minrss > rssArr[i]) {
-            minrss = rssArr[i];
-            minIndex = i;
-        }
-    }
+	var len = arr.length;
+	var i = 0;
+	var j = 0;
+	var rssArr = [];
+	var minrss = 0;
+	var minIndex = 0;
+	//first calculate the rss for each point in arr
+	for (i = 0; i < len; i++) {
+		rssArr[i] = residualSumOfSquares(arr, arr[i]);
+	}
+	//then find the index of the point with minimum rss
+	minrss = rssArr[0];
+	for (i = 0; i < len; i++) {
+		if (minrss > rssArr[i]) {
+			minrss = rssArr[i];
+			minIndex = i;
+		}
+	}
 	return arr[minIndex];
 };
 //

@@ -6,7 +6,7 @@
 		imagePreviewCanvas = doc.getElementById("imagePreview"),
 		imagePreviewCanvas2dContext = imagePreviewCanvas.getContext("2d"),
 		colorSwatchContainerDiv = doc.getElementById("colorSwatchContainer"),
-		k = 9;
+		k = 11;
 	var imageColors = {};
 	//console.log("ready!");
 	// check if filereader and other apis are supported
@@ -44,36 +44,103 @@
 	}
 
 	function drawColors(colors) {
-		//console.log("analyzeImage: colors: ", JSON.stringify(colors));
+		console.log("analyzeImage: colors: ", JSON.stringify(colors));
 		var ii = 0;
 		var jj = 0;
-		for (jj = 0; jj < colors["unique"].length; jj++) {
+		var h = 200;
+		var colorRatio = 0;
+		var sumRationPercentage = 0;
+		var numColors = colors["unique"].length;
+		var colors_sorted = new Array(numColors);
+		var ratios_sorted = new Array(numColors);
+		var maxSwatchesInARow = 5;
+		var numRowsNeeded = Math.ceil(numColors / maxSwatchesInARow);
+		var maxSwatchWidth = 200;
+		var maxSwatchHeight = 500;
+		var minSwatchHeight = 50;
+		var swatchRowArray = [];
+		var rowHieght = 0;
+		var roundedCornerRadius = 3;
+		//using padding with divs is messing with layouts, not the problem I need to solve right now.
+		//var textPadding = 5;
+		for (ii = 0; ii < numRowsNeeded; ii++) {
+			swatchRowArray.push(document.createElement("div"));
+			swatchRowArray[ii].style.width = maxSwatchesInARow * 200 + "px";
+			swatchRowArray[ii].style.height = rowHieght + "px";
+			swatchRowArray[ii].style.display = "block";
+			swatchRowArray[ii].style.position = "relative";
+			//swatchRowArray[ii].style.overflow = "hidden";
+			colorSwatchContainerDiv.appendChild(swatchRowArray[ii]);
+		}
+		// create array of containers in the main div
+		// sort colors in descending proportions
+		colors["proportions"].map(function(v, i) {
+			return {
+				value1: v,
+				value2: colors["unique"][i]
+			};
+		}).sort(function(a, b) {
+			return ((a.value1 < b.value1) ? -1 : ((a.value1 == b.value1) ? 0 : 1));
+		}).forEach(function(v, i) {
+			ratios_sorted[i] = v.value1;
+			colors_sorted[i] = v.value2;
+		});
+		// now render 
+		var rowNumber = 0;
+		var leftx = 0;
+		for (jj = 0; jj < numColors; jj++) {
 			var div = document.createElement("div");
+			// this calculation seems faulty
+			// TODO - make sure it can account for upto four decimal places, that means, 
+			// a color that is .0001% of total should be 20 pixels wide
+			// a color that is 100% of total should be 250 pixels wide
+			//colorRatio = (Math.round(10000 * colors["proportions"][jj]) / 10000);
+			colorRatio = (Math.round(10000 * ratios_sorted[jj]) / 10000);
+			h = minSwatchHeight + maxSwatchHeight * colorRatio;
+			rowHieght = (h < rowHieght) ? rowHieght : h;
+			swatchRowArray[rowNumber].style.height = rowHieght + "px";
+			leftx = (jj % maxSwatchesInARow) * maxSwatchWidth;
+			sumRationPercentage = sumRationPercentage + (100 * Math.round(10000 * colorRatio) / 10000);
 			div.style.width = "200px";
-			div.style.height = "200px";
+			div.style.height = h + "px";
 			div.style.display = 'inline-block';
 			div.style.background = "rgba(" + colors["unique"][jj].join(",") + ")";
-			//div.style.color = "white";
-			div.innerHTML = colors["unique"][jj].join(",");
-			colorSwatchContainerDiv.appendChild(div);
-			//console.log("analyzeImage: 4-(", jj, " % 4): ", 4 - (jj % 4));
-			if (((5 - (jj % 5)) == 1)) {
-				var unique_div_spacer = document.createElement("unique_div_spacer");
+			//div.style.border = "thin solid " + "rgb(" + colors_sorted[jj].slice(0, 3).join(",") + ")";
+			div.style.borderRadius = roundedCornerRadius + "px";
+			div.style.color = "white";
+			div.style.float = "left";
+			div.style.fontFamily = "monospace";
+			//div.style.padding = textPadding + "px";
+			div.style.position = "absolute";
+			if (rowNumber % 2 == 0) {
+				div.style.bottom = "0px";
+			} else {
+				div.style.top = "0px";
+			}
+			div.style.x = "0px";
+			div.style.left = leftx + "px";
+			div.innerHTML = "  <b>" + colors_sorted[jj].join(",") + "</b><br/>  " + (100 * Math.round(10000 * colorRatio) / 10000) + "%";
+			swatchRowArray[rowNumber].appendChild(div);
+			var moveToNextLine = ((maxSwatchesInARow - (jj % maxSwatchesInARow)) == 1);
+			if (moveToNextLine) {
+				/*var unique_div_spacer = document.createElement("unique_div_spacer");
 				unique_div_spacer.style.width = "0px";
 				unique_div_spacer.style.height = "0px";
 				unique_div_spacer.style.background = "rgba(255,255,255,255)";
-				unique_div_spacer.style.display = 'block';
+				unique_div_spacer.style.display = 'block';*/
 				//console.log("analyzeImage: creating block spacer");
-				colorSwatchContainerDiv.appendChild(unique_div_spacer);
+				//colorSwatchContainerDiv.appendChild(unique_div_spacer);
+				//[rowNumber].appendChild(unique_div_spacer);
+				rowNumber++;
+				rowHieght = 0;
 			}
 		}
 		var div_spacer = document.createElement("div_spacer");
-		div_spacer.style.width = "100px";
+		div_spacer.style.width = "300px";
 		div_spacer.style.height = "30px";
 		div_spacer.style.background = "rgba(255,255,255,255)";
 		div_spacer.style.display = 'block';
-		//div_spacer.style.color = "white";
-		//div_spacer.innerHTML = "-----";
+		div_spacer.style.color = "white";
 		colorSwatchContainerDiv.appendChild(div_spacer);
 		for (ii = 0; ii < colors["allColors"].length; ii++) {
 			for (jj = 0; jj < colors["allColors"][ii]["colors"].length; jj++) {
@@ -82,17 +149,14 @@
 				div.style.height = "100px";
 				div.style.display = 'inline-block';
 				div.style.background = "rgba(" + colors["allColors"][ii]["colors"][jj].join(",") + ")";
-				//div.style.color = "white";
 				div.innerHTML = colors["allColors"][ii]["colors"][jj].join(",");
 				colorSwatchContainerDiv.appendChild(div);
 			}
 			var div_spacer2 = document.createElement("div_spacer2");
 			div_spacer2.style.width = "100px";
-			div_spacer2.style.height = "30px";
+			div_spacer2.style.height = "0px";
 			div_spacer2.style.background = "rgba(255,255,255,255)";
 			div_spacer2.style.display = 'block';
-			//div_spacer2.style.color = "white";
-			//div_spacer2.innerHTML = "-----";
 			colorSwatchContainerDiv.appendChild(div_spacer2);
 		}
 	}

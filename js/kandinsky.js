@@ -1,5 +1,14 @@
+// improve:
+// the approach for computing centroid clusters is still flawed.
+// each time there's atleast one centroid with zero vectors associated with it
+// what to do when you discover a centroid with zero vectors associated?
+// how to determine if the image has fewer colors than k?
+// implement pickcentroids so that it can handle zero length clusters - DONE
+// the code is hardly readable and not very easy to maintain, fix that
+// performance needs to increase by 10x atleast
 var self = this;
 var vectors = [];
+var clusters_bak = [];
 var clusters = [];
 var vectorLength = 3;
 var k = 7;
@@ -15,28 +24,42 @@ var intertia = [];
 var jobCycle = 0;
 var colorResults = [];
 var tempInterval = 0;
-var maxJobCycles = 10;
-var maxTotalIterations = 25;
-var maxIterationsBeforeReducingK = 10;
+var maxJobCycles = 9;
+var maxTotalIterations = 5;
+var maxIterationsBeforeReducingK = 30;
 var kIteration = 0;
+var tolerance = 24;
+var unique = [];
+var uniqueProportions = [];
+//
+// for performance measurement, will be removed later
+var timearray_pickCentroids = [];
+var timearray_computeClusters = [];
+var timearray_compareCentroids = [];
+var numberOfTimes_pickCentroids_IsCalledForAJobCycle = 0;
+var numberOfTimes_computeClusters_IsCalledForAJobCycle = 0;
+var numberOfTimes_compareCentroids_IsCalledForAJobCycle = 0;
 
 function compute_kmeans(vectors, k) {
+	var finalResult = JSON.parse("{}");
 	self.vectors = vectors.slice();
 	self.k = k;
 	if (!k) {
-		k = 3;
-	}
+		k = 7;
+	};
+	colorResults = [];
 	self.vectorLength = self.vectors[0].length;
 	for (jobCycle = 0; jobCycle < maxJobCycles; jobCycle++) {
 		setTimeout(colorResults.push(compute_kmeans_jobcycle(vectors, k)), 10000);
 	}
-	return filterColors(colorResults);
+	finalResult = filterColors(colorResults);
+	return finalResult;
 }
 
 function filterColors(c) {
-	console.log("filterColors: c: ", JSON.stringify(c));
-	var unique = [];
-	var tolerance = 16;
+	//console.log("filterColors: c: ", JSON.stringify(c));
+	unique = [];
+	uniqueProportions = [];
 	var toleranceSphere = 3 * tolerance * tolerance;
 	console.log("filterColors: toleranceSphere: ", toleranceSphere);
 	var row = 0;
@@ -60,17 +83,61 @@ function filterColors(c) {
 			}
 		}
 	}
+	uniqueProportions = getProportionsForSpecificCentroids(unique);
 	return {
 		'allColors': c,
 		'unique': unique,
+		'proportions': uniqueProportions,
 	};
 }
 
+function getProportionsForSpecificCentroids(c) {
+	var p = [];
+	var numCentroids = c.length;
+	var veclen = vectors.length;
+	// for each pixel in image data, find the centroid it belongs to, update centroid count
+	var i = 0;
+	var j = 0;
+	var minsed = 0;
+	var minsedindex = 0;
+	var tempsed = 0;
+	p = new Array(numCentroids);
+	for (i = 0; i < numCentroids; i++) {
+		p[i] = 0;
+	}
+	for (i = 0; i < veclen; i++) {
+		minsed = squaredEuclideanDistance(vectors[i], c[0]);
+		minsedindex = 0;
+		for (j = 1; j < numCentroids; j++) {
+			tempsed = squaredEuclideanDistance(vectors[i], c[j]);
+			if (tempsed < minsed) {
+				minsed = tempsed;
+				minsedindex = j;
+			}
+		}
+		//p[minsedindex] = p[minsedindex]+1;
+		p[minsedindex]++;
+	}
+	p = normalizeArray(p);
+	//console.log("getProportionsForSpecificCentroids: p: ", JSON.stringify(p));
+	return p;
+}
+
 function compute_kmeans_jobcycle(vectors, k) {
+	//for performance measurement
+	numberOfTimes_pickCentroids_IsCalledForAJobCycle = 0;
+	numberOfTimes_pomputeClusters_IsCalledForAJobCycle = 0;
+	numberOfTimes_compareCentroids_IsCalledForAJobCycle = 0;
+	timearray_pickCentroids = [];
+	timearray_computeClusters = [];
+	timearray_compareCentroids = [];
+	var t0 = performance.now();
+	//
 	self.centroids = [];
 	self.clusters = [];
 	initCentroids();
 	self.oldCentroids = [];
+	console.log("compute_kmeans_jobcycle : jobCycle = ", jobCycle);
 	while (!compareCentroids() && totaliter < maxTotalIterations) {
 		totaliter++;
 		intertia[jobCycle] = totaliter;
@@ -79,8 +146,8 @@ function compute_kmeans_jobcycle(vectors, k) {
 			pickCentroids();
 		} else {
 			self.kIteration++;
-			if (kIteration >= maxIterationsBeforeReducingK && k > 1) {
-				k--;
+			if (kIteration >= maxIterationsBeforeReducingK) {
+				k = (k > 1) ? (k - 1) : k;
 				kIteration = 0;
 			}
 			if (k == 1) {
@@ -88,7 +155,34 @@ function compute_kmeans_jobcycle(vectors, k) {
 			};
 			initCentroids();
 		};
-	}
+	};
+	var t1 = performance.now();
+	console.log("compute_kmeans_jobcycle: jobcycle ", jobCycle, " took " + (t1 - t0) / 1000 + " seconds.");
+	//
+	/*
+	var timearray_pickCentroids = [];
+	var timearray_computeClusters = [];
+	var timearray_compareCentroids = [];
+	var numberOfTimes_PickCentroids_IsCalledForAJobCycle = 0;
+	var numberOfTimes_ComputeClusters_IsCalledForAJobCycle = 0;
+	var numberOfTimes_compareCentroids_IsCalledForAJobCycle = 0;
+
+	*/
+	//
+	console.log("compute_kmeans_jobcycle: jobcycle ", jobCycle, ", avg time taken by pickCentroids " + (timearray_pickCentroids.reduce(function(a, b) {
+		return (a + b) / 1000
+	}, 0)) / timearray_pickCentroids.length + " seconds.");
+	console.log("compute_kmeans_jobcycle: jobcycle ", jobCycle, ", avg time taken by computeClusters " + (timearray_computeClusters.reduce(function(a, b) {
+		return (a + b) / 1000
+	}, 0)) / timearray_computeClusters.length + " seconds.");
+	console.log("compute_kmeans_jobcycle: jobcycle ", jobCycle, ", avg time taken by compareCentroids " + (timearray_compareCentroids.reduce(function(a, b) {
+		return (a + b) / 1000
+	}, 0)) / timearray_compareCentroids.length + " seconds.");
+	console.log("compute_kmeans_jobcycle: jobcycle ", jobCycle, ", numberOfTimes_pickCentroids_IsCalledForAJobCycle " + numberOfTimes_pickCentroids_IsCalledForAJobCycle);
+	console.log("compute_kmeans_jobcycle: jobcycle ", jobCycle, ", numberOfTimes_computeClusters_IsCalledForAJobCycle " + numberOfTimes_computeClusters_IsCalledForAJobCycle);
+	console.log("compute_kmeans_jobcycle: jobcycle ", jobCycle, ", numberOfTimes_compareCentroids_IsCalledForAJobCycle " + numberOfTimes_compareCentroids_IsCalledForAJobCycle);
+	//
+	// back to real work, return the results for this job cycle
 	return {
 		'colors': centroids,
 		'ratio': getRatioArr(),
@@ -200,14 +294,24 @@ function backupAndRefreshCentroidRss() {
 }
 
 function pickCentroids() {
+	var t0 = performance.now();
 	var i = 0;
 	backupAndRefreshCentroids();
 	for (i = 0; i < k; i++) {
-		centroids.push(geometricMedian(centclusters[i]));
+		if (centclusters[i].length > 0) {
+			centroids.push(geometricMedian(centclusters[i]));
+		} else {
+			centroids.push(0);
+		}
 	}
+	var t1 = performance.now();
+	timearray_pickCentroids.push(t1 - t0);
+	numberOfTimes_pickCentroids_IsCalledForAJobCycle++;
+	//console.log("pickCentroids: processing for jobcycle ", jobCycle, " took " + (t1 - t0) / 1000 + " seconds.");
 }
 
 function computeClusters() {
+	var t0 = performance.now();
 	var numPoints = vectors.length;
 	var tempArr = [];
 	var i = 0;
@@ -233,12 +337,21 @@ function computeClusters() {
 			centroids[i] = (self.vectors[tumbdumb]);
 		}
 	}
-	return !(true && tempArr.reduce((isZero, x, i, a) => ((x.length == 0) ? false : true), true));
+	var t1 = performance.now();
+	timearray_computeClusters.push(t1 - t0);
+	numberOfTimes_computeClusters_IsCalledForAJobCycle++;
+	//console.log("computeClusters: processing for jobcycle ", jobCycle, " took " + (t1 - t0) / 1000 + " seconds.");
+	var shouldPickCentroids = true && tempArr.reduce((isZero, x, i, a) => (isZero && ((x.length > 0) ? false : true)), true);
+	//console.log("computeClusters: tempArr: ", JSON.stringify(tempArr));
+	//console.log("computeClusters: tempArr.reduce((isZero, x, i, a) => ", tempArr.reduce((isZero, x, i, a) => (isZero&&((x.length == 0) ? false : true)), true));
+	//console.log("computeClusters: shouldPickCentroids = ", shouldPickCentroids);
+	return (shouldPickCentroids);
 }
 
 function compareCentroids() {
 	//take two sets of centroids and see if they moved much or not
 	//how? their residual sum of squares is minimum or has not changed much
+	var t0 = performance.now();
 	var centroidsHaveConverged = false;
 	var i = 0;
 	var centDist = [];
@@ -260,6 +373,10 @@ function compareCentroids() {
 		//centroidsHaveConverged = (totalsumofcentroiddistance == 0);
 		centroidsHaveConverged = (JSON.stringify(oldCentRss) == JSON.stringify(centRss));
 	}
+	var t1 = performance.now();
+	timearray_compareCentroids.push(t1 - t0);
+	numberOfTimes_compareCentroids_IsCalledForAJobCycle++;
+	//console.log("compareCentroids: processing for jobcycle ", jobCycle, " took " + (t1 - t0) / 1000 + " seconds.");
 	return centroidsHaveConverged;
 }
 var algorithmNameStrings = ["kMeans"];
