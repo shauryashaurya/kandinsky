@@ -48,7 +48,6 @@
 		var ii = 0;
 		var jj = 0;
 		var h = 200;
-		var w = 200;
 		var colorRatio = 0;
 		var sumRationPercentage = 0;
 		var numColors = colors["unique"].length;
@@ -61,7 +60,7 @@
 		var minSwatchHeight = 50;
 		var swatchRowArray = [];
 		var rowHieght = 0;
-		var roundedCornerRadius = 1;
+		var roundedCornerRadius = 3;
 		//using padding with divs is messing with layouts, not the problem I need to solve right now.
 		//var textPadding = 5;
 		for (ii = 0; ii < numRowsNeeded; ii++) {
@@ -81,7 +80,7 @@
 				value2: colors["unique"][i]
 			};
 		}).sort(function(a, b) {
-			return ((a.value1 < b.value1) ? -1 : ((a.value1 == b.value1) ? 0 : 1));
+			return ((a.value1 > b.value1) ? -1 : ((a.value1 == b.value1) ? 0 : 1));
 		}).forEach(function(v, i) {
 			ratios_sorted[i] = v.value1;
 			colors_sorted[i] = v.value2;
@@ -98,18 +97,18 @@
 			//colorRatio = (Math.round(10000 * colors["proportions"][jj]) / 10000);
 			colorRatio = (Math.round(10000 * ratios_sorted[jj]) / 10000);
 			h = minSwatchHeight + maxSwatchHeight * colorRatio;
-			w = 200;
-			rowHieght = (h < rowHieght) ? rowHieght : h + 10;
+			rowHieght = (h < rowHieght) ? rowHieght : h;
 			swatchRowArray[rowNumber].style.height = rowHieght + "px";
 			leftx = (jj % maxSwatchesInARow) * maxSwatchWidth;
 			sumRationPercentage = sumRationPercentage + (100 * Math.round(10000 * colorRatio) / 10000);
-			div.style.width = w + "px";
+			div.style.width = "200px";
 			div.style.height = h + "px";
 			div.style.display = 'inline-block';
-			//div.style.background = "rgba(" + colors["unique"][jj].join(",") + ")";
-			console.log("drawColors: colors_sorted[", jj, "] = ", JSON.stringify(colors_sorted[jj]));
-            //div.style.background = "rgba(" + colors_sorted[jj].join(",") + ")";
-            //console.log("drawColors: colors[\"unique\"][", jj, "] = ", colors["unique"][jj].join(","));
+            //div.style.background = "rgba(" + colors["unique"][jj].join(",") + ")";
+			div.style.background = "rgba(" + colors_sorted[jj].join(",") + ")";
+            console.log("drawColors: colors[\"unique\"][",jj,"] = ",colors["unique"][jj].join(","));
+            console.log("drawColors: colors_sorted[",jj,"] = ",colors_sorted[jj].join(","));
+
 			//div.style.border = "thin solid " + "rgb(" + colors_sorted[jj].slice(0, 3).join(",") + ")";
 			div.style.borderRadius = roundedCornerRadius + "px";
 			div.style.color = "white";
@@ -120,8 +119,7 @@
 			if (rowNumber % 2 == 0) {
 				div.style.bottom = "0px";
 			} else {
-				div.style.bottom = "0px";
-				//div.style.top = "0px";
+				div.style.top = "0px";
 			}
 			div.style.x = "0px";
 			div.style.left = leftx + "px";

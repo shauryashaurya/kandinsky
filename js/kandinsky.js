@@ -25,8 +25,8 @@ var intertia = [];
 var jobCycle = 0;
 var colorResults = [];
 var tempInterval = 0;
-var maxJobCycles = 4;
-var maxTotalIterations = 9;
+var maxJobCycles = 11;
+var maxTotalIterations = 14;
 var maxIterationsBeforeReducingK = 5;
 var kIteration = 0;
 var tolerance = 24;
@@ -127,7 +127,7 @@ function getProportionsForSpecificCentroids(c) {
 function compute_kmeans_jobcycle(vectors, k) {
 	//for performance measurement
 	numberOfTimes_pickCentroids_IsCalledForAJobCycle = 0;
-	numberOfTimes_computeClusters_IsCalledForAJobCycle = 0;
+	numberOfTimes_pomputeClusters_IsCalledForAJobCycle = 0;
 	numberOfTimes_compareCentroids_IsCalledForAJobCycle = 0;
 	timearray_pickCentroids = [];
 	timearray_computeClusters = [];
@@ -299,13 +299,11 @@ function pickCentroids() {
 	var i = 0;
 	backupAndRefreshCentroids();
 	for (i = 0; i < k; i++) {
-		console.log("pickCentroids: centclusters[", i, "]: ", JSON.stringify(centclusters[i]));
-		if (centclusters[i].length > 0) {
+		//if (centclusters[i].length > 0) {
 			centroids.push(geometricMedian(centclusters[i]));
-		} else {
-			//keep it the same
-			centroids.push(JSON.parse(JSON.stringify(oldCentroids[i])));
-		}
+		//} else {
+		//	centroids.push(0);
+		//}
 	}
 	var t1 = performance.now();
 	timearray_pickCentroids.push(t1 - t0);
@@ -333,7 +331,6 @@ function computeClusters() {
 		clusters.push(minsedindex);
 		centclusters[minsedindex].push(i);
 	}
-	console.log("computeClusters: centclusters = ", JSON.stringify(centclusters));
 	tempArr = centclusters.map((e) => e.length);
 	for (i = 0; i < k; i++) {
 		if (tempArr[i] == 0) {
@@ -345,11 +342,11 @@ function computeClusters() {
 	timearray_computeClusters.push(t1 - t0);
 	numberOfTimes_computeClusters_IsCalledForAJobCycle++;
 	//console.log("computeClusters: processing for jobcycle ", jobCycle, " took " + (t1 - t0) / 1000 + " seconds.");
-	var shouldPickCentroids = tempArr.reduce((isZero, x, i, a) => (isZero && ((x.length > 0) ? false : true)), true);
+	var shouldPickCentroids = true && tempArr.reduce((isZero, x, i, a) => (isZero && ((x.length > 0) ? false : true)), true);
 	//console.log("computeClusters: tempArr: ", JSON.stringify(tempArr));
 	//console.log("computeClusters: tempArr.reduce((isZero, x, i, a) => ", tempArr.reduce((isZero, x, i, a) => (isZero&&((x.length == 0) ? false : true)), true));
-	console.log("computeClusters: shouldPickCentroids = ", shouldPickCentroids);
-	return (shouldPickCentroids);
+	//console.log("computeClusters: shouldPickCentroids = ", shouldPickCentroids);
+	return (!shouldPickCentroids);
 }
 
 function compareCentroids() {

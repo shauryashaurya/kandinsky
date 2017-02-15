@@ -7,8 +7,6 @@ function squaredEuclideanDistance(pointA, pointB) {
 	var i = 0;
 	var distance = 0;
 	var dimensions = pointA.length;
-	pointA = (pointA) ? pointA : [0, 0, 0, 0];
-	pointB = (pointB) ? pointB : [255, 255, 255, 255];
 	for (i = 0; i < dimensions; i++) {
 		distance += squareOfDifference(pointA[i], pointB[i]);
 	}
@@ -62,7 +60,6 @@ function geometricMedian(arr) {
 			minIndex = i;
 		}
 	}
-    console.log("geometricMedian: arr[",minIndex,"] = ", JSON.stringify(arr[minIndex]));
 	return arr[minIndex];
 };
 //
