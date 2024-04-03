@@ -19,11 +19,11 @@ Significant colors in a photograph.
 # Eight Down Toofaan Mail  
 Kandinsky helped in the cinematography for our feature film **Eight Down Toofaan Mail**.  
   
-<html> 
-	<img src="./images/Eight-Down-Toofaan-Mail-2022.jpg" width="65%" align="left" alt="our feature film **Eight Down Toofaan Mail**" />
-	<br />  
+<html>   
+	<img src="./images/Eight-Down-Toofaan-Mail-2022.jpg" width="65%" align="left" alt="our feature film **Eight Down Toofaan Mail**" />  
+	<br/>  
 </html>    
-  
+    
 After a successful awards run and theatrical distribution in India, the film is now [on YouTube](https://www.youtube.com/watch?v=VnHPtozfhRU)      
     
 # References  
