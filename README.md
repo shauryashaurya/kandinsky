@@ -20,7 +20,7 @@ Significant colors in a photograph.
 Kandinsky helped in the cinematography for our feature film **Eight Down Toofaan Mail**.  
   
 <html>   
-	<img src="./images/Eight-Down-Toofaan-Mail-2022.jpg" width="65%" align="left" alt="our feature film **Eight Down Toofaan Mail**" />  
+	<img src="./images/Eight-Down-Toofaan-Mail-2022.jpg" width="65%" align="center" alt="our feature film **Eight Down Toofaan Mail**" />  
 	<br/>  
 </html>    
     
