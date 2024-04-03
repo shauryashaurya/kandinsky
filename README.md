@@ -24,7 +24,12 @@ Kandinsky helped in the cinematography for our feature film **Eight Down Toofaan
 	<br/>  
 </html>    
     
-After a successful awards run and theatrical distribution in India, the film is now [on YouTube](https://www.youtube.com/watch?v=VnHPtozfhRU)      
+- Trailer for [**Eight Down Toofaan Mail** on YouTube](https://www.youtube.com/watch?v=KthvCCE2Vrk)   
+- After a successful awards run and theatrical distribution in India, the film is now on [YouTube (with English Subtitles)](https://www.youtube.com/watch?v=VnHPtozfhRU)      
+- Opening day audience reactions [YouTube Shorts](https://www.youtube.com/shorts/X8JeKFUFbU0)    
+- Press release from Ministry of Information and Broadcasting, Govt. of India at [IFFI 2021](https://pib.gov.in/PressReleaseIframePage.aspx?PRID=1774084)  
+- Full press conference at [IFFI 2021 (YouTube)](https://www.youtube.com/watch?v=emp7znBA_DI)  
+  
     
 # References  
 - [Useful Color Equations](http://www.brucelindbloom.com/index.html?SpectCalcSpreadsheets.html)  
