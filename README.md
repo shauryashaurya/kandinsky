@@ -10,9 +10,76 @@ Significant colors in a photograph.
 
 ---
   
-# Notebooks  
+# Scope    
+
+This started as a very simple exploration of the simplest clustering algorithm in use, but I can see that doing a more comprehensive coverage of algorithms may be very valuable. Kandinsky aims to cover:  
+
+I. Basic building blocks  
   
-### 01 This Whole Colour Thing  
+* Similarity/Distance Measures:  
+   * Euclidean Distance (Cartesian)  
+   * Manhattan Distance  
+   * Cosine Distance  
+   * Mahalanobis Distance  
+   * Domain-specific Distances  
+* Data Preprocessing:  
+   * Feature Scaling and Normalization  
+   * Dimensionality Reduction (e.g., PCA, t-SNE)  
+* Cluster Evaluation:  
+   * Internal Measures (Cohesion, Separation)  
+      * Silhouette Coefficient  
+      * Davies-Bouldin Index  
+   * External Measures (vs. Ground Truth)  
+      * Purity, Rand Index, Adjusted Rand Index  
+  
+II. Clustering Algorithms  
+  
+1. Partitioning-Based  
+   * K-Means (hard assignments)  
+   * K-Medoids (more robust to outliers)  
+   * Fuzzy C-Means (soft assignments)  
+  
+2. Hierarchical  
+   * Agglomerative (Bottom-up)  
+      * Various linkage methods (single, complete, average)  
+   * Divisive (Top-down)  
+  
+3. Density-Based  
+   * DBSCAN (Density-Based Spatial Clustering of Applications with Noise, discovers clusters of varying shapes)  
+   * OPTICS (Ordering Points To Identify the Clustering Structure, extension of DBSCAN, provides reachability plot)  
+   * HDBSCAN (Improved density clustering, handles varying densities)  
+  
+4. Distribution-Based  
+   * Gaussian Mixture Models (GMM) (assumes data follows mixtures of Gaussian distributions)  
+  
+5. Grid-Based  
+   * STING  
+   * CLIQUE  
+  
+6. Neural Network-Based  
+   * Autoencoders (Variational, Denoising, etc.)   
+      * Learn latent representations for clustering  
+   * Self-Organizing Maps (SOMs)  
+      *  Preserve neighborhood relationships in a grid-like space  
+   * Deep Embedded Clustering (DEC)  
+  
+III. Additional Stuff to tackle when I get time and braincycles to spare...  
+  
+* Spectral Clustering (Flexible approach, particularly effective on non-convex cluster shapes)  
+* Graph-Based Clustering  
+* Hybrid Approaches (Combining traditional algorithms with neural networks)  
+* Clustering High-Dimensional Data  
+* Clustering Large-Scale Data (sampling, incremental approaches)  
+* Affinity Propagation (Finds clusters based on message-passing between data points)  
+
+---  
+  
+# Notebooks [*WIP*]
+  
+* 00 Prep the Pictures
+* 01 K-Means
+* 015 Color Models
+  
   
 ---  
   
