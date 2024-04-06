@@ -36,3 +36,6 @@ Kandinsky helped in the cinematography for our feature film **Eight Down Toofaan
 - [Colour-Science](https://www.colour-science.org/) and [GitHub](https://github.com/colour-science/colour)  
 - [Awesome Color from Colour-Science](https://github.com/colour-science/awesome-colour)  
   
+## Font
+- Some presentations use [The Inter typeface family](https://rsms.me/inter/)
+  
