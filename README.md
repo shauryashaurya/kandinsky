@@ -16,16 +16,18 @@ This started as a very simple exploration of the simplest clustering algorithm i
 
 I. Basic building blocks  
   
-* Similarity/Distance Measures:  
+1. Similarity/Distance Measures:  
    * Euclidean Distance (Cartesian)  
    * Manhattan Distance  
    * Cosine Distance  
    * Mahalanobis Distance  
    * Domain-specific Distances  
-* Data Preprocessing:  
+   
+2. Data Preprocessing:  
    * Feature Scaling and Normalization  
    * Dimensionality Reduction (e.g., PCA, t-SNE)  
-* Cluster Evaluation:  
+   
+3. Cluster Evaluation:  
    * Internal Measures (Cohesion, Separation)  
       * Silhouette Coefficient  
       * Davies-Bouldin Index  
