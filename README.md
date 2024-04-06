@@ -53,10 +53,10 @@ II. Clustering Algorithms
   
 4. Distribution-Based  
    * Gaussian Mixture Models (GMM) (assumes data follows mixtures of Gaussian distributions)  
-  
-5. Grid-Based  
-   * STING  
-   * CLIQUE  
+    
+5. Grid-Based    
+   * STING (Statistical Information Grid-based Clustering)  
+   * CLIQUE (Clustering In QUEst)  
   
 6. Neural Network-Based  
    * Autoencoders (Variational, Denoising, etc.)   
@@ -67,12 +67,17 @@ II. Clustering Algorithms
   
 III. Additional Stuff to tackle when I get time and braincycles to spare...  
   
+* Clustering High-Dimensional Data: Image data often results in high-dimensional feature vectors, so techniques for dimensionality reduction become crucial. It is easy to see that distances like Euclidean or Cartesian lose their meaning as we go into higher dimensional data. Also think about situations where one dimension may not advance as much as other - for e.g. considering age and salary, age may only go from 0 to 100, while salary may range from 0 to 1 million (hint: specifically for this example, prefer Manhattan distance over Cartesian).   
+* Clustering Large-Scale Data: When you have many images, scalable clustering algorithms (e.g., sampling or mini-batch variations of standard methods) are essential.  
 * Spectral Clustering (Flexible approach, particularly effective on non-convex cluster shapes)  
 * Graph-Based Clustering  
 * Hybrid Approaches (Combining traditional algorithms with neural networks)  
 * Clustering High-Dimensional Data  
 * Clustering Large-Scale Data (sampling, incremental approaches)  
 * Affinity Propagation (Finds clusters based on message-passing between data points)  
+  
+  
+...so yeah! there's a bunch of work needed!
 
 ---  
   
