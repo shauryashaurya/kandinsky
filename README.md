@@ -105,6 +105,11 @@ Kandinsky helped in the cinematography for our feature film **Eight Down Toofaan
 - Full press conference at [IFFI 2021 (YouTube)](https://www.youtube.com/watch?v=emp7znBA_DI)  
   
     
+# Talks  
+- at [PyCascades Seattle 2024](https://pretalx.com/pycascades-2024/talk/A3G9Y3/): [(uneditied live-stream) YouTube](https://www.youtube.com/live/sVtkDhz5liI?si=9JvBJFf3Y3jPt_Da&t=29845), [schedule](https://2024.pycascades.com/program/schedule/#2024-04-06)  
+- at Vidyalankar Institure of Technology [LinkedIn Post](https://www.linkedin.com/posts/shauryashaurya_machinelearning-activity-7169987748383211520-rfhc?utm_source=share&utm_medium=member_desktop) (no video)  
+  
+  
 # References  
 - [Useful Color Equations](http://www.brucelindbloom.com/index.html?SpectCalcSpreadsheets.html)  
 - [Colour-Science](https://www.colour-science.org/) and [GitHub](https://github.com/colour-science/colour)  
